@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<title>ધ્વજ વંદન કાર્યક્રમ આમંત્રણ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+:root{
+    --saffron:#ff9933;
+    --green:#138808;
+    --blue:#0d47a1;
+}
+
+/* ===== COMMON ===== */
+body{
+    font-family:"Noto Sans Gujarati",sans-serif;
+    background:#ddd;
+    margin:0;
+    padding:20px;
+}
+
+/* ===== FORM ===== */
+.form-box{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+.form-box h3{margin-top:0;color:var(--blue);}
+.form-box input{
+    width:100%;
+    padding:10px;
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+/* ===== WHATSAPP CARD (🔥 FIXED) ===== */
+.whatsapp-card{
+    width:1080px;
+
+    /* 🔥 CRITICAL FIX */
+    min-height:1350px;
+    height:auto;
+    overflow:visible;
+
+    margin:30px auto;
+    padding:80px 70px 120px;
+    box-sizing:border-box;
+
+    background:
+      radial-gradient(circle at top, rgba(255,255,255,0.5), transparent 40%),
+      repeating-linear-gradient(
+        45deg,
+        rgba(255,153,51,0.25),
+        rgba(255,153,51,0.25) 20px,
+        rgba(19,136,8,0.25) 20px,
+        rgba(19,136,8,0.25) 40px
+      ),
+      linear-gradient(
+        180deg,
+        #ff9933 0%,
+        #ffcc80 20%,
+        #ffffff 50%,
+        #c8e6c9 80%,
+        #138808 100%
+      );
+
+    border:16px solid transparent;
+    border-radius:36px;
+    position:relative;
+}
+
+/* Border */
+.whatsapp-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:36px;
+    padding:16px;
+    background:linear-gradient(180deg,#ff9933,#ffffff,#138808);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
+}
+
+/* Ashoka Chakra */
+.whatsapp-card::after{
+    content:"☸";
+    position:absolute;
+    top:52%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:300px;
+    color:rgba(13,71,161,0.12);
+}
+
+/* ===== CONTENT PANEL ===== */
+.card-content{
+    position:relative;
+    z-index:2;
+    background:rgba(255,255,255,0.9);
+    border-radius:28px;
+    padding:45px;
+    text-align:center;
+}
+
+/* Flag */
+.flag{
+    width:170px;
+    margin:0 auto 15px;
+}
+.flag img{width:100%;}
+
+/* ===== TEXT ===== */
+h1{font-size:42px;color:#e65100;margin-bottom:6px;}
+h2{font-size:36px;color:#1b5e20;margin-top:0;}
+.badge{
+    font-size:22px;
+    font-weight:bold;
+    color:var(--blue);
+    margin:20px 0 30px;
+}
+.content{
+    font-size:26px;
+    line-height:1.9;
+    color:var(--blue);
+    text-align:justify;
+}
+.program{
+    margin:35px auto;
+    padding:26px;
+    border:3px dashed var(--blue);
+    border-radius:20px;
+    width:90%;
+    font-size:26px;
+    background:#fff;
+}
+.program span{color:#c2185b;font-weight:bold;}
+
+/* ===== FOOTER (SAFE) ===== */
+.footer{
+    margin-top:30px;
+    margin-bottom:20px;
+    font-size:26px;
+    font-weight:bold;
+    color:#4e342e;
+    line-height:1.6;
+}
+.school-name{
+    font-size:28px;
+    color:var(--blue);
+    margin:6px 0 8px;
+}
+
+/* ===== BUTTONS ===== */
+.actions{text-align:center;}
+button{
+    padding:14px 26px;
+    font-size:18px;
+    background:linear-gradient(to right,#ff9933,#138808);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin:8px;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== FORM ===== -->
+<div class="form-box">
+<h3>📝 Live Details</h3>
+
+મહેમાનનું નામ:
+<input id="fName" value="મહેમાન નું નામ" oninput="update()">
+
+સ્થળ:
+<input id="fPlace" value="શાળા નું નામ" oninput="update()">
+
+તારીખ:
+<input id="fDate" value="26/01/2026" oninput="update()">
+
+સમય:
+<input id="fTime" value="08:00 કલાકે સવારે" oninput="update()">
+
+🏫 સ્કૂલનું નામ:
+<input id="fSchool" value="શાળા નું નામ" oninput="update()">
+</div>
+
+<!-- ===== POSTER ===== -->
+<div id="poster" class="whatsapp-card">
+<div class="card-content">
+
+<div class="flag">
+<img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg">
+</div>
+
+<h1>આમંત્રણ પત્રિકા</h1>
+<h2>પ્રજાસત્તાક દિવસ</h2>
+<div class="badge">26 January – Happy Republic Day</div>
+
+<div class="content">
+સ્નેહી શ્રી, <b id="guest">શ્રીમતી સીમાબેન શાહ</b><br><br>
+
+સાદર જણાવવાનું કે સ્વતંત્ર ભારતના <b>૭૭માં પ્રજાસત્તાક દિવસ</b>ના પાવન
+પર્વ નિમિતે અમારી શાળામાં પરંપરાગત રીતે <b>ધ્વજ વંદન કાર્યક્રમ</b>
+આયોજિત કરવામાં આવ્યો છે.<br><br>
+
+રાષ્ટ્રધ્વજને સન્માન આપતો આ કાર્યક્રમ દેશપ્રેમ, શિસ્ત અને
+રાષ્ટ્રીય એકતાનો સંદેશ આપે છે. આ ગૌરવપૂર્ણ પ્રસંગે આપની
+ઉપસ્થિતિથી કાર્યક્રમની શોભા વધશે તથા બાળકોમાં
+દેશપ્રેમની ભાવના વધુ મજબૂત બનશે.<br><br>
+
+આથી, આપને આ ધ્વજ વંદન કાર્યક્રમમાં સહપરિવાર
+ઉપસ્થિત રહી કાર્યક્રમને ગૌરવમય બનાવવા
+વિનમ્ર આમંત્રણ પાઠવીએ છીએ.
+</div>
+
+<div class="program">
+સ્થળ : <span id="place">ખમીદાણા પ્રાથમિક શાળા</span><br>
+તારીખ : <span id="date">26/01/2026</span><br>
+સમય : <span id="time">08:00 કલાકે સવારે</span>
+</div>
+
+<div class="footer">
+નિમંત્રક<br>
+<div class="school-name" id="school">ખમીદાણા પ્રાથમિક શાળા</div>
+આચાર્ય તથા<br>
+સમસ્ત શાળા પરિવાર
+</div>
+
+</div>
+</div>
+
+<!-- ===== ACTIONS ===== -->
+<div class="actions">
+<button onclick="downloadPNG()">📸 PNG Download</button>
+<button onclick="shareWhatsApp()">📲 WhatsApp Share</button>
+</div>
+
+<script>
+function update(){
+    guest.innerText=fName.value;
+    place.innerText=fPlace.value;
+    date.innerText=fDate.value;
+    time.innerText=fTime.value;
+    school.innerText=fSchool.value;
+}
+
+function downloadPNG(){
+    html2canvas(document.getElementById("poster"),{scale:2}).then(canvas=>{
+        let a=document.createElement("a");
+        a.download="26_January_Dhwaj_Vandan.png";
+        a.href=canvas.toDataURL("image/png");
+        a.click();
+    });
+}
+
+function shareWhatsApp(){
+    html2canvas(document.getElementById("poster"),{scale:2}).then(canvas=>{
+        canvas.toBlob(function(blob){
+            const file=new File([blob],"26_January_Dhwaj_Vandan.png",{type:"image/png"});
+            if(navigator.canShare && navigator.canShare({files:[file]})){
+                navigator.share({
+                    files:[file],
+                    title:"Republic Day Invitation",
+                    text:"🇮🇳 ધ્વજ વંદન કાર્યક્રમ માટે હાર્દિક આમંત્રણ"
+                });
+            }else{
+                window.open(
+                  "https://wa.me/?text="+encodeURIComponent("🇮🇳 ધ્વજ વંદન કાર્યક્રમ માટે હાર્દિક આમંત્રણ"),
+                  "_blank"
+                );
+            }
+        });
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Digital Pocket</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-weight: 700; letter-spacing: 1px; }
+        header p { opacity: 0.7; font-size: 0.9rem; }
+
+        /* Professional Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        /* Glassmorphism Card */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 25px 15px;
+            border-radius: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .icon { font-size: 40px; }
+        .name { font-weight: 500; font-size: 0.9rem; }
+
+        /* Floating Bottom Nav for Mobile */
+        .nav-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 10px 30px;
+            border-radius: 50px;
+            display: flex;
+            gap: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-item { color: white; text-decoration: none; font-size: 20px; opacity: 0.6; }
+        .nav-item.active { opacity: 1; color: var(--primary); }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Smart Portal</h1>
+        <p>Tamara Documents, Have Tamari Mutthi ma.</p>
+    </header>
+
+    <div class="grid">
+        <a href="bonafide.html" class="card">
+            <div class="icon">📑</div>
+            <div class="name">Bonafide</div>
+        </a>
+        <a href="janmdakhlo.html" class="card">
+            <div class="icon">🍼</div>
+            <div class="name">Janm Dakhlo</div>
+        </a>
+        <a href="amantran.html" class="card">
+            <div class="icon">✉️</div>
+            <div class="name">Amantran</div>
+        </a>
+        <a href="#" class="card">
+            <div class="icon">⚙️</div>
+            <div class="name">Settings</div>
+        </a>
+    </div>
+
+    <div class="nav-bar">
+        <a href="#" class="nav-item active">🏠</a>
+        <a href="#" class="nav-item">🔍</a>
+        <a href="#" class="nav-item">👤</a>
+    </div>
+
+</body>
+</html>
