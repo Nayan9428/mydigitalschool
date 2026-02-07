@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>૨ પત્રિકા (A4) - ફ્લેગ સુધારો</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Rasa:wght@400;500;600;700&family=Shrikhand&family=Baloo+Bhai+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rasa', serif;
+            background-color: #f3f4f6;
+        }
+        .header-font {
+            font-family: 'Shrikhand', cursive;
+            font-weight: 400;
+        }
+        .footer-font {
+            font-family: 'Baloo Bhai 2', cursive;
+            font-weight: 700;
+        }
+        .noto-sans {
+            font-family: 'Noto Sans Gujarati', sans-serif;
+        }
+        
+        .certificate-border {
+            border: 5px solid transparent;
+            border-image: linear-gradient(to right, #FF9933, #FFFFFF, #138808) 1;
+            position: relative;
+            background: #fff;
+            background-image: 
+                radial-gradient(circle at center, rgba(255, 153, 51, 0.03) 0%, rgba(255, 255, 255, 0) 70%);
+            height: 100%;
+        }
+
+        .inner-border {
+            border: 2px solid #000080;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Decorative Corners SVG Pattern */
+        .corner {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            z-index: 10;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 0 Q50 0 25 25 Q0 50 0 100 Z' fill='%23FF9933' /%3E%3Cpath d='M0 0 L80 0 Q40 0 20 20 Q0 40 0 80 Z' fill='%23FFFFFF' /%3E%3Cpath d='M0 0 L60 0 Q30 0 15 15 Q0 30 0 60 Z' fill='%23138808' /%3E%3Ccircle cx='12' cy='12' r='6' fill='%23000080' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        /* Positioning and Rotation for corners */
+        .top-left { 
+            top: -1px; left: -1px; 
+            transform: rotate(0deg); 
+        }
+        .top-right { 
+            top: -1px; right: -1px; 
+            transform: rotate(90deg); 
+        }
+        .bottom-right { 
+            bottom: -1px; right: -1px; 
+            transform: rotate(180deg); 
+        }
+        .bottom-left { 
+            bottom: -1px; left: -1px; 
+            transform: rotate(270deg); 
+        }
+
+        /* Waving Flag Watermark - Improved Waves */
+        .flag-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            opacity: 0.12;
+            pointer-events: none;
+            /* Updated SVG for Smoother Waving Flag */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3C!-- Pole --%3E%3Cpath d='M5 5 L5 95' stroke='%23333' stroke-width='3' stroke-linecap='round' /%3E%3C!-- Saffron Stripe --%3E%3Cpath d='M 5 10 C 35 0 65 20 95 10 L 95 30 C 65 40 35 20 5 30 Z' fill='%23FF9933' /%3E%3C!-- White Stripe --%3E%3Cpath d='M 5 30 C 35 20 65 40 95 30 L 95 50 C 65 60 35 40 5 50 Z' fill='%23FFFFFF' stroke='%23eeeeee' stroke-width='0.5' /%3E%3C!-- Green Stripe --%3E%3Cpath d='M 5 50 C 35 40 65 60 95 50 L 95 70 C 65 80 35 60 5 70 Z' fill='%23138808' /%3E%3C!-- Ashoka Chakra --%3E%3Cg transform='translate(50, 40) rotate(10)'%3E%3Ccircle cx='0' cy='0' r='7' stroke='%23000080' stroke-width='1.5' fill='none' /%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%23000080' /%3E%3Cpath d='M0 -7 L0 7 M-6 -3.5 L6 3.5 M-6 3.5 L6 -3.5' stroke='%23000080' stroke-width='0.8' /%3E%3C/g%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-container {
+                width: 210mm;
+                height: 296mm; 
+                max-height: 100vh;
+                background: white;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+            }
+            .card-wrapper {
+                flex: 0 0 50%;
+                height: 50%;
+                padding: 10mm 15mm;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                border-bottom: 1px dashed #999;
+                page-break-inside: avoid;
+                overflow: hidden;
+            }
+            .card-wrapper:last-child {
+                border-bottom: none;
+            }
+            
+            .certificate-border, .corner, .flag-bg {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            h1 { font-size: 2.2rem !important; margin-bottom: 0.5rem !important; }
+            h2 { font-size: 1rem !important; margin-bottom: 0.2rem !important; }
+            p { font-size: 1rem !important; line-height: 1.5 !important; }
+            .mt-3 { margin-top: 0.5rem !important; }
+            .mt-4 { margin-top: 0.5rem !important; }
+            .mb-2 { margin-bottom: 0.3rem !important; }
+            .inner-border { padding: 1rem !important; } 
+            .flag-bg { width: 180px !important; height: 180px !important; opacity: 0.15 !important; }
+            .corner { width: 60px !important; height: 60px !important; }
+            
+            .footer-block { padding-top: 0.5rem !important; border-top: 2px solid #d1d5db !important; }
+            .footer-school { margin-top: 0.2rem !important; font-size: 0.9rem !important; }
+        }
+
+        .print-container {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-wrapper {
+            flex: 1;
+            padding: 15px;
+            border-bottom: 2px dashed #ddd;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen p-4 pb-20">
+
+    <!-- Input Form Section -->
+    <div class="no-print bg-white w-full max-w-2xl shadow-xl rounded-lg p-6 mb-8 border-t-4 border-orange-500">
+        
+        <!-- HEADER: Title and Creator Name -->
+        <div class="text-center mb-6 border-b border-gray-200 pb-4">
+            <h1 class="text-4xl text-orange-600 mb-2 header-font tracking-wide">આમંત્રણ પત્રિકા</h1>
+            <p class="text-gray-600 font-medium">Created by: <span class="text-2xl text-blue-900 header-font" style="font-family: 'Shrikhand', cursive;">Rajdeep Pandya</span></p>
+            <p class="text-sm text-gray-500 mt-1 font-semibold noto-sans">રતન તલાવડી પ્રા.શાળા, તા.બાયડ, જિ.અરવલ્લી</p>
+        </div>
+
+        <h2 class="text-xl font-bold text-blue-900 mb-4 border-b pb-2 noto-sans">વિગતો અહીં ભરો:</h2>
+        
+        <!-- Logo Input Section -->
+        <div class="mb-4 bg-orange-50 p-3 rounded border border-orange-100">
+            <label class="block text-sm font-medium text-gray-700 mb-1 noto-sans">શાળાનો લોગો અપલોડ કરો (Optional)</label>
+            <input type="file" id="input-logo" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-500 file:text-white hover:file:bg-orange-600" onchange="updateLogo()">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 noto-sans">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">શાળાનું નામ</label>
+                <input type="text" id="input-school" placeholder="દા.ત. રતન તલાવડી પ્રા.શાળા" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 outline-none" oninput="updateCard()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">ગામનું નામ</label>
+                <input type="text" id="input-village" placeholder="દા.ત. રતન તલાવડી" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 outline-none" oninput="updateCard()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">તાલુકો</label>
+                <input type="text" id="input-taluka" placeholder="દા.ત. બાયડ" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 outline-none" oninput="updateCard()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">જિલ્લો</label>
+                <input type="text" id="input-district" placeholder="દા.ત. અરવલ્લી" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 outline-none" oninput="updateCard()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">તારીખ</label>
+                <input type="text" id="input-date" placeholder="દા.ત. ૨૬ જાન્યુઆરી, ૨૦૨૬" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 outline-none" oninput="updateCard()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">સમય</label>
+                <input type="text" id="input-time" placeholder="દા.ત. સવારે ૮:૦૦ કલાકે" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 outline-none" oninput="updateCard()">
+            </div>
+            
+            <!-- Cultural Program Selection -->
+            <div class="col-span-1 md:col-span-2 bg-blue-50 p-3 rounded border border-blue-100">
+                <label class="block text-sm font-bold text-gray-700 mb-2">શું સાંસ્કૃતિક કાર્યક્રમ રાખેલ છે?</label>
+                <div class="flex gap-6">
+                    <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-blue-100 transition">
+                        <input type="radio" name="program" value="yes" onchange="updateCard()" class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                        <span class="text-gray-800 font-medium">હા</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-blue-100 transition">
+                        <input type="radio" name="program" value="no" onchange="updateCard()" checked class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                        <span class="text-gray-800 font-medium">ના</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <button onclick="window.print()" class="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transition duration-200 transform hover:scale-105 flex items-center justify-center mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                પ્રિન્ટ (A4 - ૨ પત્રિકા)
+            </button>
+            <p class="text-xs text-red-500 mt-2 font-bold animate-pulse">મહત્વપૂર્ણ: પ્રિન્ટ સેટિંગ્સમાં "Margins" ને "None" અને "Scale" ને "Default" અથવા "Fit to paper" સેટ કરો.</p>
+        </div>
+    </div>
+
+    <!-- A4 Container with 2 Cards -->
+    <div class="print-container shadow-2xl">
+        
+        <!-- CARD 1 -->
+        <div class="card-wrapper">
+            <div class="certificate-border shadow-sm">
+                <div class="inner-border p-4 flex flex-col justify-between relative overflow-hidden h-full">
+                    
+                    <!-- Decorative Corners (Tricolor) -->
+                    <div class="corner top-left"></div>
+                    <div class="corner top-right"></div>
+                    <div class="corner bottom-left"></div>
+                    <div class="corner bottom-right"></div>
+
+                    <!-- Watermark -->
+                    <div class="flag-bg"></div>
+
+                    <!-- School Logo (Initially Hidden) -->
+                    <img class="school-logo-img absolute top-4 right-4 w-20 h-20 object-contain hidden z-20" src="" alt="School Logo">
+
+                    <!-- Header -->
+                    <div class="text-center relative z-10">
+                        <div class="inline-block px-4 py-1 mb-2 border-b-2 border-orange-400">
+                            <h2 class="text-orange-600 font-bold text-lg tracking-wider header-font">|| વંદે માતરમ ||</h2>
+                        </div>
+                        <h1 class="text-4xl text-blue-900 mb-1 header-font" style="text-shadow: 2px 2px 0px rgba(0,0,0,0.1); letter-spacing: 1px;">ભાવભર્યું નિમંત્રણ</h1>
+                        <div class="flex items-center justify-center gap-2 mt-1">
+                             <div class="h-0.5 w-12 bg-green-600"></div>
+                             <p class="text-green-700 text-lg font-bold">૭૭મો પ્રજાસત્તાક દિન</p>
+                             <div class="h-0.5 w-12 bg-orange-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- Main Body -->
+                    <div class="mt-3 text-gray-800 text-lg leading-relaxed text-justify relative z-10 px-2 font-medium">
+                        <div class="mb-2">
+                            <span class="font-bold text-blue-900 text-xl">પ્રતિ,</span><br>
+                            <span class="font-bold text-xl">સ્નેહીશ્રી</span> 
+                            <span class="border-b border-dashed border-gray-400 inline-block w-48 ml-2"></span>
+                        </div>
+                        <p class="indent-8 text-xl">
+                            આપશ્રીને જણાવતા આનંદ થાય છે કે, આપણી શાળા 
+                            <span class="disp-school font-bold text-blue-900 text-xl underline decoration-orange-300 decoration-2 underline-offset-4">[શાળાનું નામ]</span>, 
+                            તા. <span class="disp-taluka font-bold text-blue-900 text-xl underline decoration-orange-300 decoration-2 underline-offset-4">[તાલુકો]</span>, 
+                            જિ. <span class="disp-district font-bold text-blue-900 text-xl underline decoration-orange-300 decoration-2 underline-offset-4">[જિલ્લો]</span> માં 
+                            આગામી <span class="font-bold text-orange-600">૨૬મી જાન્યુઆરી</span> ના રોજ 
+                            રાષ્ટ્રીય પર્વની <span class="disp-program-text font-bold">ભવ્ય ઉજવણી</span> રાખેલ છે. તો આપશ્રીને આ કાર્યક્રમમાં પધારવા હાર્દિક નિમંત્રણ છે.
+                        </p>
+                    </div>
+
+                    <!-- Details Box -->
+                    <div class="relative z-10 mt-3 border border-double border-blue-200 bg-blue-50/50 p-3 rounded">
+                         <div class="flex flex-wrap justify-between items-center text-lg font-semibold">
+                            <div class="w-full md:w-auto mb-1 md:mb-0">
+                                <p class="flex items-center mb-1"><span class="text-orange-600 mr-2">📅</span> <strong>તારીખ:</strong>&nbsp;<span class="disp-date text-blue-900">[તારીખ]</span></p>
+                                <p class="flex items-center"><span class="text-orange-600 mr-2">⏰</span> <strong>સમય:</strong>&nbsp;<span class="disp-time text-blue-900">[સમય]</span></p>
+                            </div>
+                            <div class="w-full md:w-auto border-t md:border-t-0 md:border-l border-blue-200 pt-2 md:pt-0 md:pl-4">
+                                <p class="flex items-start">
+                                    <span class="text-green-600 mr-2 mt-1">📍</span> 
+                                    <span>
+                                        <strong>સ્થળ:</strong> પ્રાથમિક શાળા, <span class="disp-village font-bold text-blue-900">[ગામ]</span>
+                                    </span>
+                                </p>
+                            </div>
+                         </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="mt-4 relative z-10 flex justify-between items-end">
+                         <div class="text-center w-full">
+                            <p class="text-sm text-gray-500 mb-1">લી.</p>
+                            <div class="footer-block border-t-2 border-gray-300 pt-1 inline-block px-8">
+                                <p class="text-xl text-blue-900 footer-font tracking-wide">આચાર્યશ્રી તથા સ્ટાફગણ</p>
+                                <p class="text-lg text-blue-900 footer-font mt-1 tracking-wide">શાળા વ્યવસ્થાપન સમિતિ (SMC)</p>
+                            </div>
+                            <p class="footer-school text-md font-semibold text-gray-700 mt-2 noto-sans">[શાળાનું નામ]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="card-wrapper">
+            <div class="certificate-border shadow-sm">
+                <div class="inner-border p-4 flex flex-col justify-between relative overflow-hidden h-full">
+                    
+                    <!-- Decorative Corners -->
+                    <div class="corner top-left"></div>
+                    <div class="corner top-right"></div>
+                    <div class="corner bottom-left"></div>
+                    <div class="corner bottom-right"></div>
+
+                    <!-- Watermark -->
+                    <div class="flag-bg"></div>
+
+                    <!-- School Logo -->
+                    <img class="school-logo-img absolute top-4 right-4 w-20 h-20 object-contain hidden z-20" src="" alt="School Logo">
+
+                    <div class="text-center relative z-10">
+                        <div class="inline-block px-4 py-1 mb-2 border-b-2 border-orange-400">
+                            <h2 class="text-orange-600 font-bold text-lg tracking-wider header-font">|| વંદે માતરમ ||</h2>
+                        </div>
+                        <h1 class="text-4xl text-blue-900 mb-1 header-font" style="text-shadow: 2px 2px 0px rgba(0,0,0,0.1); letter-spacing: 1px;">ભાવભર્યું નિમંત્રણ</h1>
+                         <div class="flex items-center justify-center gap-2 mt-1">
+                             <div class="h-0.5 w-12 bg-green-600"></div>
+                             <p class="text-green-700 text-lg font-bold">૭૭મો પ્રજાસત્તાક દિન</p>
+                             <div class="h-0.5 w-12 bg-orange-500"></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-gray-800 text-lg leading-relaxed text-justify relative z-10 px-2 font-medium">
+                        <div class="mb-2">
+                            <span class="font-bold text-blue-900 text-xl">પ્રતિ,</span><br>
+                            <span class="font-bold text-xl">સ્નેહીશ્રી</span> 
+                            <span class="border-b border-dashed border-gray-400 inline-block w-48 ml-2"></span>
+                        </div>
+                        <p class="indent-8 text-xl">
+                            આપશ્રીને જણાવતા આનંદ થાય છે કે, આપણી શાળા 
+                            <span class="disp-school font-bold text-blue-900 text-xl underline decoration-orange-300 decoration-2 underline-offset-4">[શાળાનું નામ]</span>, 
+                            તા. <span class="disp-taluka font-bold text-blue-900 text-xl underline decoration-orange-300 decoration-2 underline-offset-4">[તાલુકો]</span>, 
+                            જિ. <span class="disp-district font-bold text-blue-900 text-xl underline decoration-orange-300 decoration-2 underline-offset-4">[જિલ્લો]</span> માં 
+                            આગામી <span class="font-bold text-orange-600">૨૬મી જાન્યુઆરી</span> ના રોજ 
+                            રાષ્ટ્રીય પર્વની <span class="disp-program-text font-bold">ભવ્ય ઉજવણી</span> રાખેલ છે. તો આપશ્રીને આ કાર્યક્રમમાં પધારવા હાર્દિક નિમંત્રણ છે.
+                        </p>
+                    </div>
+                    <div class="relative z-10 mt-3 border border-double border-blue-200 bg-blue-50/50 p-3 rounded">
+                         <div class="flex flex-wrap justify-between items-center text-lg font-semibold">
+                            <div class="w-full md:w-auto mb-1 md:mb-0">
+                                <p class="flex items-center mb-1"><span class="text-orange-600 mr-2">📅</span> <strong>તારીખ:</strong>&nbsp;<span class="disp-date text-blue-900">[તારીખ]</span></p>
+                                <p class="flex items-center"><span class="text-orange-600 mr-2">⏰</span> <strong>સમય:</strong>&nbsp;<span class="disp-time text-blue-900">[સમય]</span></p>
+                            </div>
+                            <div class="w-full md:w-auto border-t md:border-t-0 md:border-l border-blue-200 pt-2 md:pt-0 md:pl-4">
+                                <p class="flex items-start">
+                                    <span class="text-green-600 mr-2 mt-1">📍</span> 
+                                    <span>
+                                        <strong>સ્થળ:</strong> પ્રાથમિક શાળા, <span class="disp-village font-bold text-blue-900">[ગામ]</span>
+                                    </span>
+                                </p>
+                            </div>
+                         </div>
+                    </div>
+                    <div class="mt-4 relative z-10 flex justify-between items-end">
+                         <div class="text-center w-full">
+                            <p class="text-sm text-gray-500 mb-1">લી.</p>
+                            <div class="footer-block border-t-2 border-gray-300 pt-1 inline-block px-8">
+                                <p class="text-xl text-blue-900 footer-font tracking-wide">આચાર્યશ્રી તથા સ્ટાફગણ</p>
+                                <p class="text-lg text-blue-900 footer-font mt-1 tracking-wide">શાળા વ્યવસ્થાપન સમિતિ (SMC)</p>
+                            </div>
+                            <p class="footer-school text-md font-semibold text-gray-700 mt-2 noto-sans">[શાળાનું નામ]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function updateCard() {
+            // Get values
+            const school = document.getElementById('input-school').value;
+            const village = document.getElementById('input-village').value;
+            const taluka = document.getElementById('input-taluka').value;
+            const district = document.getElementById('input-district').value;
+            const date = document.getElementById('input-date').value;
+            const time = document.getElementById('input-time').value;
+
+            // Get selected radio button value for Cultural Program
+            const programOption = document.querySelector('input[name="program"]:checked').value;
+
+            // Update all elements with class 'disp-school'
+            document.querySelectorAll('.disp-school').forEach(el => {
+                el.textContent = school || '[શાળાનું નામ]';
+            });
+
+            // Update all elements with class 'footer-school'
+            document.querySelectorAll('.footer-school').forEach(el => {
+                el.textContent = school || '[શાળાનું નામ]';
+            });
+            
+            // Update all elements with class 'disp-village'
+            document.querySelectorAll('.disp-village').forEach(el => {
+                el.textContent = village || '[ગામ]';
+            });
+
+            // Update all elements with class 'disp-taluka'
+            document.querySelectorAll('.disp-taluka').forEach(el => {
+                el.textContent = taluka || '[તાલુકો]';
+            });
+
+            // Update all elements with class 'disp-district'
+            document.querySelectorAll('.disp-district').forEach(el => {
+                el.textContent = district || '[જિલ્લો]';
+            });
+            
+            // Update date
+            document.querySelectorAll('.disp-date').forEach(el => {
+                 if (date) {
+                    el.textContent = date;
+                } else {
+                    el.textContent = '[તારીખ]';
+                }
+            });
+
+            // Update time
+            document.querySelectorAll('.disp-time').forEach(el => {
+                if (time) {
+                    el.textContent = time;
+                } else {
+                    el.textContent = '[સમય]';
+                }
+            });
+
+            // Update Cultural Program Text
+            document.querySelectorAll('.disp-program-text').forEach(el => {
+                if (programOption === 'yes') {
+                    el.textContent = 'ભવ્ય ઉજવણી અને સાંસ્કૃતિક કાર્યક્રમ';
+                } else {
+                    el.textContent = 'ભવ્ય ઉજવણી';
+                }
+            });
+        }
+
+        function updateLogo() {
+            const fileInput = document.getElementById('input-logo');
+            const file = fileInput.files[0];
+            const logoImgs = document.querySelectorAll('.school-logo-img');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoImgs.forEach(img => {
+                        img.src = e.target.result;
+                        img.classList.remove('hidden');
+                    });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                logoImgs.forEach(img => {
+                    img.src = '';
+                    img.classList.add('hidden');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

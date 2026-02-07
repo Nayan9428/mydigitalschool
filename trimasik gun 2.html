@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Master Gunpatrak | Mahendra Prajapati</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --main-blue: #1a237e; --light-blue: #e3f2fd; --accent-orange: #ff9800; }
+        body { font-family: 'Hind Vadodara', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        
+        .no-print { 
+            background: white; padding: 25px; max-width: 1000px; margin: 0 auto 30px auto; 
+            border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); text-align: center;
+            border-top: 6px solid var(--main-blue);
+        }
+
+        /* પ્રશ્ન સેટ કરવા માટેનું કલરફૂલ કંટ્રોલ */
+        .q-setter {
+            background: #f8f9fa; display: inline-flex; align-items: center; 
+            padding: 10px 20px; border-radius: 50px; border: 2px solid var(--accent-orange);
+            margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .q-label { font-weight: bold; margin-right: 15px; color: #333; }
+        .q-btn { 
+            width: 35px; height: 35px; border-radius: 50%; border: none; 
+            background: var(--accent-orange); color: white; font-size: 20px; 
+            font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .q-btn:hover { transform: scale(1.1); background: #e68a00; }
+        .q-input { 
+            width: 50px; text-align: center; border: none; background: transparent; 
+            font-size: 18px; font-weight: bold; color: var(--main-blue);
+        }
+
+        input[type="text"], textarea { 
+            width: 95%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; 
+            border-radius: 8px; font-size: 14px; outline: none;
+        }
+
+        .subject-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
+        .tag { background: #eee; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.3s; }
+        .tag.active { background: var(--main-blue); color: white; }
+
+        .print-page { 
+            background: white; width: 210mm; min-height: 297mm; margin: 0 auto 20px auto; 
+            padding: 8mm; box-sizing: border-box; box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            page-break-after: always;
+        }
+
+        .colorful-header {
+            background: linear-gradient(135deg, var(--main-blue) 0%, #0288d1 100%);
+            color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px;
+        }
+
+        table { width: 100%; border-collapse: collapse; border: 2px solid black; table-layout: fixed; }
+        th, td { border: 1.2px solid black; padding: 5px 1px; text-align: center; font-size: 12px; }
+        thead { background: var(--light-blue); }
+        .col-sr { width: 30px; }
+        .col-name { width: 170px; text-align: left; padding-left: 6px; }
+        .col-total { width: 45px; font-weight: bold; background: #f1f1f1; color: #d32f2f; }
+
+        .mark-input { width: 100%; border: none; text-align: center; font-weight: bold; background: transparent; outline: none; }
+
+        .btn { color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.3s; }
+        .btn-date { background: #009688; }
+        .btn-pdf { background: #d32f2f; }
+        .btn-excel { background: #2e7d32; }
+        .btn-backup { background: #fb8c00; }
+
+        @media print { .no-print { display: none; } .print-page { margin: 0; box-shadow: none; width: 100%; padding: 8mm; } }
+    </style>
+</head>
+<body>
+
+<div class="no-print">
+    <h2 style="color: var(--main-blue);">📊 સ્માર્ટ ગુણપત્રક મેનેજર</h2>
+    
+    <input type="text" id="schName" placeholder="અહીં તમારી શાળાનું નામ લખો..." oninput="renderTables()">
+    
+    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+        <input type="text" id="reportDate" style="width: 200px;" placeholder="તારીખ સેટ કરો">
+        <button class="btn btn-date" onclick="setCurrentDate()">📅 આજની તારીખ</button>
+        
+        <div class="q-setter">
+            <span class="q-label">પ્રશ્નોની સંખ્યા:</span>
+            <button class="q-btn" onclick="changeQ(-1)">−</button>
+            <input type="text" id="queCount" class="q-input" value="10" readonly>
+            <button class="q-btn" onclick="changeQ(1)">+</button>
+        </div>
+    </div>
+    
+    <div class="subject-tags" id="subjectList"></div>
+    <textarea id="nameInput" placeholder="વિદ્યાર્થીઓના નામ અહીં પેસ્ટ કરો (દરેક નવી લાઈનમાં)..." oninput="renderTables()"></textarea><br>
+    
+    <button class="btn btn-pdf" onclick="generatePDF()">📄 PDF ડાઉનલોડ</button>
+    <button class="btn btn-excel" onclick="generateExcel()">📊 Excel ડાઉનલોડ</button>
+    <button class="btn btn-backup" onclick="exportData()">📥 Backup સેવ</button>
+    <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+    <button class="btn" style="background:#7b1fa2; border-radius:30px;" onclick="document.getElementById('importFile').click()">📤 Restore લોડ</button>
+</div>
+
+<div id="outputArea"></div>
+
+<script>
+const defaultSubjects = ["ગુજરાતી", "ગણિત", "અંગ્રેજી", "હિન્દી", "વિજ્ઞાન", "સામાજિક વિજ્ઞાન", "સંસ્કૃત", "પર્યાવરણ"];
+let selectedSubjects = [...defaultSubjects];
+
+function init() {
+    const container = document.getElementById('subjectList');
+    container.innerHTML = "";
+    defaultSubjects.forEach(sub => {
+        let tag = document.createElement('span');
+        tag.className = 'tag active';
+        tag.innerText = sub;
+        tag.onclick = function() {
+            this.classList.toggle('active');
+            updateSelectedList();
+        };
+        container.appendChild(tag);
+    });
+    renderTables();
+}
+
+function changeQ(val) {
+    let qInput = document.getElementById('queCount');
+    let current = parseInt(qInput.value);
+    let newVal = current + val;
+    if(newVal >= 1 && newVal <= 25) {
+        qInput.value = newVal;
+        renderTables();
+    }
+}
+
+function setCurrentDate() {
+    const today = new Date();
+    const formatted = today.getDate().toString().padStart(2, '0') + '/' + 
+                      (today.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                      today.getFullYear();
+    document.getElementById('reportDate').value = formatted;
+    renderTables();
+}
+
+function updateSelectedList() {
+    selectedSubjects = [];
+    document.querySelectorAll('.tag.active').forEach(tag => selectedSubjects.push(tag.innerText));
+    renderTables();
+}
+
+function renderTables() {
+    const school = document.getElementById('schName').value || "શાળાનું નામ";
+    const dateVal = document.getElementById('reportDate').value || "___/___/______";
+    const qCount = parseInt(document.getElementById('queCount').value);
+    const names = document.getElementById('nameInput').value.split('\n').filter(n => n.trim() !== "");
+    const container = document.getElementById('outputArea');
+    
+    const oldData = {};
+    document.querySelectorAll(".student-row").forEach(row => {
+        const key = `${row.dataset.sname}-${row.dataset.nidx}`;
+        oldData[key] = Array.from(row.querySelectorAll(".mark-input")).map(input => input.value);
+    });
+
+    container.innerHTML = "";
+
+    selectedSubjects.forEach((sub, sIdx) => {
+        let section = document.createElement('div');
+        section.className = 'print-page';
+        
+        let displayCount = names.length > 0 ? names.length : 10;
+        let rowHtml = "";
+
+        for (let nIdx = 0; nIdx < displayCount; nIdx++) {
+            const studentName = names[nIdx] || "";
+            const key = `${sub}-${nIdx}`;
+            const marks = oldData[key] || Array(qCount).fill("");
+            
+            rowHtml += `
+                <tr class="student-row" data-sname="${sub}" data-nidx="${nIdx}">
+                    <td class="col-sr"><b>${nIdx + 1}</b></td>
+                    <td class="col-name">${studentName}</td>
+                    ${Array.from({length: qCount}, (_, i) => `<td><input type="number" class="mark-input" value="${marks[i] || ''}" oninput="calcTotal(this)"></td>`).join('')}
+                    <td class="col-total">0</td>
+                </tr>`;
+        }
+
+        section.innerHTML = `
+            <div class="colorful-header">
+                <h1>${school}</h1>
+                <h3>કસોટી ગુણપત્રક - વિષય: ${sub}</h3>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-weight:bold; font-size:14px;">
+                <span>વિષય: ${sub}</span>
+                <span>તારીખ: ${dateVal}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="col-sr">ક્રમ</th>
+                        <th rowspan="2" class="col-name">વિદ્યાર્થીનું નામ</th>
+                        <th colspan="${qCount}">મેળવેલ ગુણ (પ્રશ્ન મુજબ)</th>
+                        <th rowspan="2" class="col-total">કુલ</th>
+                    </tr>
+                    <tr>${Array.from({length:qCount}, (_, i) => `<th>${i+1}</th>`).join('')}</tr>
+                </thead>
+                <tbody>${rowHtml}</tbody>
+            </table>
+            <div style="text-align: right; margin-top:10px; font-weight:bold; font-size:11px;">Created by Mahendra Prajapati</div>
+        `;
+        container.appendChild(section);
+        section.querySelectorAll(".student-row").forEach(row => calcTotal(row.querySelector(".mark-input")));
+    });
+}
+
+function calcTotal(input) {
+    if (!input) return;
+    const row = input.closest('tr');
+    let sum = 0;
+    row.querySelectorAll('.mark-input').forEach(i => sum += parseFloat(i.value) || 0);
+    row.querySelector('.col-total').innerText = sum;
+}
+
+function generatePDF() {
+    const element = document.getElementById('outputArea');
+    html2pdf().set({ margin: 0, filename: 'Gunpatrak.pdf', jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
+}
+
+function generateExcel() {
+    const wb = XLSX.utils.book_new();
+    document.querySelectorAll('.print-page').forEach((page, i) => {
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(page.querySelector('table')), `Sheet${i+1}`);
+    });
+    XLSX.writeFile(wb, "Gunpatrak.xlsx");
+}
+
+function exportData() {
+    const data = { sch: document.getElementById('schName').value, dt: document.getElementById('reportDate').value, qc: document.getElementById('queCount').value, names: document.getElementById('nameInput').value, marks: [] };
+    document.querySelectorAll(".student-row").forEach(row => {
+        data.marks.push(Array.from(row.querySelectorAll(".mark-input")).map(i => i.value));
+    });
+    const blob = new Blob([JSON.stringify(data)], {type: "application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Gunpatrak_Backup.json";
+    a.click();
+}
+
+function importData(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        const d = JSON.parse(reader.result);
+        document.getElementById('schName').value = d.sch;
+        document.getElementById('reportDate').value = d.dt || "";
+        document.getElementById('queCount').value = d.qc || 10;
+        document.getElementById('nameInput').value = d.names;
+        renderTables();
+        setTimeout(() => {
+            document.querySelectorAll(".student-row").forEach((row, i) => {
+                row.querySelectorAll(".mark-input").forEach((input, j) => { input.value = d.marks[i][j]; });
+                calcTotal(row.querySelector(".mark-input"));
+            });
+        }, 300);
+    };
+    reader.readAsText(event.target.files[0]);
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

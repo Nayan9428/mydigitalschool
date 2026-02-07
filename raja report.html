@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <title>રજા રિપોર્ટ - હર્ષિલ દરજી</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Hind Vadodara', sans-serif; }
+        body { background-color: #f4f7f6; margin: 0; padding: 20px; }
+
+        .input-container {
+            max-width: 900px; margin: 0 auto 30px auto; background: #fff;
+            padding: 25px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-top: 6px solid #1a252f;
+        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: 600; margin-bottom: 5px; font-size: 14px; color: #444; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; outline: none; }
+
+        .a4-page {
+            width: 210mm; min-height: 297mm; 
+            padding: 10mm 15mm 15mm 15mm; 
+            margin: auto; background: white; box-shadow: 0 0 15px rgba(0,0,0,0.2); color: #000;
+        }
+
+        .header-info-right { display: flex; justify-content: flex-end; margin-bottom: 30px; }
+        .info-block { text-align: left; min-width: 250px; line-height: 1.4; font-size: 16px; }
+
+        .left-side { text-align: left; margin-bottom: 25px; line-height: 1.5; font-size: 17px; }
+        .center-subject { text-align: center; font-weight: bold; margin: 20px 0; font-size: 18.5px; text-decoration: underline; }
+        .paragraph { text-align: justify; text-indent: 50px; margin-bottom: 30px; font-size: 17.5px; line-height: 2.1; }
+        
+        /* Signature Styles */
+        .sig-preview { max-height: 60px; max-width: 150px; display: block; margin: 0 0 5px auto; }
+        .sig-preview-left { max-height: 60px; max-width: 150px; display: block; margin: 0 auto 5px 0; }
+        
+        .yours-faithfully { text-align: right; margin-top: 10px; font-size: 17px; }
+        .sign-line { font-weight: bold; margin-top: 5px; }
+
+        .footer-stats { margin-top: 40px; border-top: 1px solid #000; padding-top: 15px; font-size: 17px; line-height: 2; }
+        .bold-item { font-weight: bold; }
+        .sign-area-bottom { margin-top: 30px; font-size: 17px; }
+        .val { font-weight: 700; border-bottom: 1px dotted #000; padding: 0 5px; }
+
+        .button-group { text-align: center; margin: 20px 0; }
+        .btn {
+            display: inline-block; width: 200px; padding: 12px;
+            color: white; border: none; border-radius: 8px;
+            font-size: 15px; cursor: pointer; font-weight: bold; margin: 5px;
+        }
+        .print-btn { background: #2ecc71; }
+        .pdf-btn { background: #3498db; }
+
+        @media print {
+            .input-container, .button-group, .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .a4-page { box-shadow: none; margin: 0; width: 100%; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print" style="text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 10px;">
+    રજા રિપોર્ટ Created by Harshil Darji 
+</div>
+
+<div class="input-container">
+    <div class="form-grid">
+        <div class="form-group"><label>શિક્ષકનું નામ</label><input type="text" id="inTeacher" oninput="liveUpdate()"></div>
+        <div class="form-group"><label>શાળાનું નામ</label><input type="text" id="inSchool" oninput="liveUpdate()" value="નવી કોશિયલ પ્રાથમિક શાળા"></div>
+        <div class="form-group"><label>તાલુકો/જિલ્લો</label><input type="text" id="inLoc" oninput="liveUpdate()" value="તા.માતર, જિ.ખેડા"></div>
+        <div class="form-group"><label>આજની તારીખ</label><input type="date" id="inDate" onchange="liveUpdate()"></div>
+        <div class="form-group"><label>રજાનો પ્રકાર</label>
+            <select id="inType" onchange="liveUpdate()"><option>સી.એલ.</option><option>મરજીયાત</option><option>વળતર</option></select>
+        </div>
+        <div class="form-group"><label>કઈ તારીખથી</label><input type="date" id="inFrom" onchange="liveUpdate()"></div>
+        <div class="form-group"><label>કઈ તારીખ સુધી</label><input type="date" id="inTo" onchange="liveUpdate()"></div>
+        <div class="form-group"><label>રજાનું કારણ</label><input type="text" id="inReason" oninput="liveUpdate()"></div>
+        <div class="form-group"><label>ચાર્જ સંભાળનાર શિક્ષક</label><input type="text" id="inCharge" oninput="liveUpdate()"></div>
+        <div class="form-group"><label>અરજદારની સહી (Upload)</label><input type="file" id="upUserSig" accept="image/*" onchange="handleSignature(event, 'outUserSig')"></div>
+        <div class="form-group"><label>ચાર્જ સંભાળનારની સહી (Upload)</label><input type="file" id="upChargeSig" accept="image/*" onchange="handleSignature(event, 'outChargeSig')"></div>
+        <div class="form-group"><label>ભોગવેલ રજા</label><input type="number" id="inUsed" oninput="liveUpdate()" value="0"></div>
+        <div class="form-group"><label>જમા રજા</label><input type="number" id="inLeft" oninput="liveUpdate()" value="0"></div>
+    </div>
+</div>
+
+<div class="button-group">
+    <button class="btn print-btn" onclick="window.print()">રિપોર્ટ પ્રિન્ટ કરો</button>
+    <button class="btn pdf-btn" onclick="window.print()">પીડીએફ ડાઉનલોડ કરો</button>
+</div>
+
+<div class="a4-page">
+    <div class="header-info-right">
+        <div class="info-block">
+            <span id="outTeacherName">________</span><br>
+            <span id="outSchoolName">________</span><br>
+            <span id="outLocName">________</span><br>
+            તારીખ: <span id="outDate">________</span><br>
+            વાર: <span id="outDay">________</span>
+        </div>
+    </div>
+
+    <div class="left-side">
+        પ્રતિ,<br>
+        આચાર્યશ્રી,<br>
+        <span id="outSchoolName2">________</span><br>
+        <span id="outLocName2">________</span>
+    </div>
+
+    <div class="center-subject">
+        વિષય : <span class="val" id="outDaysCount">__</span> દિવસની <span id="outLeaveType">સી. એલ.</span> રજા મેળવવા બાબત
+    </div>
+
+    <div class="paragraph">
+        સવિનય જય ભારત સાથે આપ સાહેબશ્રીને જણાવવાનું કે મારે <span class="val" id="outReason">_______</span> કારણોસર તારીખ <span class="val" id="outFrom">_______</span> થી તારીખ <span class="val" id="outTo">_______</span> સુધી એમ કુલ <span class="val" id="outDaysCount2">__</span> દિવસની <span id="outLeaveType2">સી. એલ.</span> રજા ની જરૂરિયાત હોય હું ફરજ પર હાજર રહી શકું તેમ નથી. તો મારી <span class="val" id="outDaysCount3">__</span> દિવસની રજા મંજૂર કરવા આપ સાહેબશ્રી ને નમ્ર વિનંતી. મારા વર્ગખંડ નો ચાર્જ આ. શિક્ષકશ્રી <span class="val" id="outCharge">_______</span> ને સોંપવામાં આવે છે. આભાર
+    </div>
+
+    <div class="yours-faithfully">
+        આપનો વિશ્વાસુ,<br>
+        <img id="outUserSig" class="sig-preview" style="display:none;">
+        <div class="sign-line">સહી: ____________________</div>
+        (<span id="outTeacherName2">________</span>)<br>
+        <span id="outSchoolName3">________</span>
+    </div>
+
+    <div class="footer-stats">
+        • અત્યાર સુધી ભોગવેલ સી.એલ/મરજીયાત/વળતર રજા: <span id="outUsedDisplay">0</span></span><br>
+        • અત્યાર સુધી જમાં સી.એલ/મરજીયાત/વળતર રજા: <span id="outLeftDisplay">0</span></span>
+    </div>
+
+    <div class="sign-area-bottom">
+        <img id="outChargeSig" class="sig-preview-left" style="display:none;">
+        ચાર્જ સંભાળનાર શિક્ષકશ્રીની સહી : ____________________
+    </div>
+</div>
+
+<script>
+    function handleSignature(event, targetId) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById(targetId);
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function liveUpdate() {
+        const teacher = document.getElementById('inTeacher').value;
+        const school = document.getElementById('inSchool').value;
+        const loc = document.getElementById('inLoc').value;
+        const dateVal = document.getElementById('inDate').value;
+        const type = document.getElementById('inType').value;
+        const fDate = document.getElementById('inFrom').value;
+        const tDate = document.getElementById('inTo').value;
+        const reason = document.getElementById('inReason').value;
+        const charge = document.getElementById('inCharge').value;
+        const used = document.getElementById('inUsed').value;
+        const left = document.getElementById('inLeft').value;
+
+        let dCount = "__";
+        if(fDate && tDate) {
+            const start = new Date(fDate);
+            const end = new Date(tDate);
+            const diff = end - start;
+            if(diff >= 0) dCount = Math.ceil(diff / (1000 * 60 * 60 * 24)) + 1;
+        }
+
+        document.getElementById('outTeacherName').innerText = teacher || "________";
+        document.getElementById('outTeacherName2').innerText = teacher || "________";
+        document.getElementById('outSchoolName').innerText = school || "________";
+        document.getElementById('outSchoolName2').innerText = school || "________";
+        document.getElementById('outSchoolName3').innerText = school || "________";
+        document.getElementById('outLocName').innerText = loc || "________";
+        document.getElementById('outLocName2').innerText = loc || "________";
+        
+        document.getElementById('outDaysCount').innerText = dCount;
+        document.getElementById('outDaysCount2').innerText = dCount;
+        document.getElementById('outDaysCount3').innerText = dCount;
+        
+        document.getElementById('outLeaveType').innerText = type;
+        document.getElementById('outLeaveType2').innerText = type;
+        document.getElementById('outReason').innerText = reason || "_______";
+        document.getElementById('outCharge').innerText = charge || "_______";
+        document.getElementById('outUsedDisplay').innerText = used || "0";
+        document.getElementById('outLeftDisplay').innerText = left || "0";
+
+        if(dateVal) {
+            const d = new Date(dateVal);
+            document.getElementById('outDate').innerText = d.toLocaleDateString('en-GB');
+            const gDays = ["રવિવાર", "સોમવાર", "મંગળવાર", "બુધવાર", "ગુરૂવાર", "શુક્રવાર", "શનિવાર"];
+            document.getElementById('outDay').innerText = gDays[d.getDay()];
+        }
+        if(fDate) document.getElementById('outFrom').innerText = new Date(fDate).toLocaleDateString('en-GB');
+        if(tDate) document.getElementById('outTo').innerText = new Date(tDate).toLocaleDateString('en-GB');
+    }
+</script>
+
+</body>
+</html>
