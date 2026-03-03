@@ -37,6 +37,7 @@
             padding: 20px;
             max-width: 1000px;
             margin: auto;
+            margin-bottom: 80px; /* Space for bottom nav */
         }
 
         /* Glassmorphism Card */
@@ -53,6 +54,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -78,10 +80,91 @@
             gap: 40px;
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
         .nav-item { color: white; text-decoration: none; font-size: 20px; opacity: 0.6; }
         .nav-item.active { opacity: 1; color: var(--primary); }
+
+        /* --- Modal (Popup) Styles --- */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 { margin: 0; font-size: 1.2rem; }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        .close-btn:hover { opacity: 1; color: #ff4757; }
+
+        /* List inside Modal */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .quiz-item {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .quiz-item:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .quiz-item-icon { font-size: 1.2rem; }
 
         /* Responsive */
         @media (max-width: 400px) {
@@ -97,6 +180,11 @@
     </header>
 
     <div class="grid">
+        <div class="card" onclick="openModal()">
+            <div class="icon">📝</div>
+            <div class="name">ક્વિઝ પોર્ટલ</div>
+        </div>
+
         <a href="26_January_invitation.html" class="card">
             <div class="icon">📩</div>
             <div class="name">26 જાન્યુઆરી આમંત્રણ</div>
@@ -131,13 +219,67 @@
         </a>
     </div>
 
+    <div class="modal-overlay" id="quizModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()"> <div class="modal-header">
+                <h2>📝 બધી ક્વિઝનું લિસ્ટ</h2>
+                <button class="close-btn" onclick="closeModal(event)">×</button>
+            </div>
+            <div class="quiz-list">
+                <a href="Parakh Quiz1.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-1</span>
+                </a>
+                 <a href="Parakh Quiz2.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-2</span>
+                </a>
+                 <a href="Parakh Quiz3.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-3</span>
+                </a>
+                 <a href="Parakh Quiz4.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-4</span>
+                </a>
+                 <a href="Parakh Quiz5.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-5</span>
+                </a>
+                 <a href="Parakh Quiz6.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-6</span>
+                </a>
+                 <a href="Parakh Quiz7.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-7</span>
+                </a>
+                 <a href="Parakh Quiz8.html" class="quiz-item">
+                    <span class="quiz-item-icon">📘</span>
+                    <span>પરખ ક્વિજ-8</span>
+                </a>
+                
+                </div>
+        </div>
+    </div>
+
     <div class="nav-bar">
         <a href="#" class="nav-item active">🏠</a>
         <a href="#" class="nav-item">🔍</a>
         <a href="#" class="nav-item">👤</a>
     </div>
 
+    <script>
+        function openModal() {
+            document.getElementById('quizModal').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            // Check if the click is on the close button or outside the modal content
+            if(event.target.classList.contains('modal-overlay') || event.target.classList.contains('close-btn')){
+                document.getElementById('quizModal').style.display = 'none';
+            }
+        }
+    </script>
+
 </body>
-
 </html>
-
