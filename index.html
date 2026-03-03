@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Digital Pocket</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #ffffff;
@@ -14,8 +14,8 @@
 
         body {
             margin: 0;
-            font-family: 'Poppins', sans-serif;
-            /* નવું કલરફુલ એનિમેટેડ બેકગ્રાઉન્ડ */
+            /* અહીં Poppins ની જગ્યાએ Hind Vadodara સેટ કર્યું */
+            font-family: 'Hind Vadodara', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -23,7 +23,6 @@
             min-height: 100vh;
         }
 
-        /* બેકગ્રાઉન્ડનું એનિમેશન */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -37,7 +36,7 @@
         }
 
         header h1 { margin: 0; font-weight: 700; letter-spacing: 1px; font-size: 2.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        header p { opacity: 0.9; font-size: 1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        header p { opacity: 0.9; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); font-weight: 500; }
 
         /* Professional Grid */
         .grid {
@@ -47,14 +46,14 @@
             padding: 20px;
             max-width: 1000px;
             margin: auto;
-            margin-bottom: 80px; /* Space for bottom nav */
+            margin-bottom: 80px; 
         }
 
         /* Glassmorphism Card */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px); /* Safari માટે */
+            -webkit-backdrop-filter: blur(12px); 
             border: 1px solid rgba(255,255,255,0.3);
             padding: 25px 15px;
             border-radius: 20px;
@@ -77,7 +76,7 @@
         }
 
         .icon { font-size: 45px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
-        .name { font-weight: 500; font-size: 0.95rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        .name { font-weight: 600; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
         /* Floating Bottom Nav for Mobile */
         .nav-bar {
@@ -102,7 +101,7 @@
 
         /* --- Modal (Popup) Styles --- */
         .modal-overlay {
-            display: none; /* Hidden by default */
+            display: none; 
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.4);
@@ -140,7 +139,7 @@
             padding-bottom: 15px;
         }
 
-        .modal-header h2 { margin: 0; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        .modal-header h2 { margin: 0; font-size: 1.4rem; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         
         .close-btn {
             background: rgba(255,255,255,0.2);
@@ -167,7 +166,6 @@
             overflow-y: auto;
         }
         
-        /* Scrollbar છુપાવવા માટે */
         .quiz-list::-webkit-scrollbar { width: 5px; }
         .quiz-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 10px; }
 
@@ -183,6 +181,7 @@
             transition: 0.3s;
             border: 1px solid rgba(255,255,255,0.2);
             font-weight: 500;
+            font-size: 1.1rem;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
@@ -195,7 +194,6 @@
 
         .quiz-item-icon { font-size: 1.5rem; }
 
-        /* Responsive */
         @media (max-width: 400px) {
             .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
         }
@@ -205,7 +203,7 @@
 
     <header>
         <h1>Smart Portal</h1>
-        <p>Tamara Documents, Have Tamari Mutthi ma.</p>
+        <p>તમારા ડોક્યુમેન્ટ્સ, હવે તમારી મુઠ્ઠીમાં.</p>
     </header>
 
     <div class="grid">
@@ -244,7 +242,7 @@
         </a>
         <a href="#" class="card">
             <div class="icon">⚙️</div>
-            <div class="name">Settings</div>
+            <div class="name">સેટિંગ્સ</div>
         </a>
     </div>
 
@@ -303,7 +301,6 @@
         }
 
         function closeModal(event) {
-            // Check if the click is on the close button or outside the modal content
             if(event.target.classList.contains('modal-overlay') || event.target.classList.contains('close-btn')){
                 document.getElementById('quizModal').style.display = 'none';
             }
