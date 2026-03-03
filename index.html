@@ -7,17 +7,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --bg: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.1);
+            --primary: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-hover: rgba(255, 255, 255, 0.25);
         }
 
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* નવું કલરફુલ એનિમેટેડ બેકગ્રાઉન્ડ */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: white;
             min-height: 100vh;
+        }
+
+        /* બેકગ્રાઉન્ડનું એનિમેશન */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Header */
@@ -26,8 +36,8 @@
             text-align: center;
         }
 
-        header h1 { margin: 0; font-weight: 700; letter-spacing: 1px; }
-        header p { opacity: 0.7; font-size: 0.9rem; }
+        header h1 { margin: 0; font-weight: 700; letter-spacing: 1px; font-size: 2.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        header p { opacity: 0.9; font-size: 1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
         /* Professional Grid */
         .grid {
@@ -43,28 +53,31 @@
         /* Glassmorphism Card */
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* Safari માટે */
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 25px 15px;
             border-radius: 20px;
             text-align: center;
             text-decoration: none;
             color: white;
-            transition: 0.3s;
+            transition: 0.4s;
             display: flex;
             flex-direction: column;
             gap: 10px;
             cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
 
         .card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-5px);
-            border-color: var(--primary);
+            background: var(--card-hover);
+            transform: translateY(-8px);
+            border-color: #fff;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
         }
 
-        .icon { font-size: 40px; }
-        .name { font-weight: 500; font-size: 0.9rem; }
+        .icon { font-size: 45px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
+        .name { font-weight: 500; font-size: 0.95rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
         /* Floating Bottom Nav for Mobile */
         .nav-bar {
@@ -72,27 +85,28 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(15px);
-            padding: 10px 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 35px;
             border-radius: 50px;
             display: flex;
             gap: 40px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             z-index: 10;
         }
 
-        .nav-item { color: white; text-decoration: none; font-size: 20px; opacity: 0.6; }
-        .nav-item.active { opacity: 1; color: var(--primary); }
+        .nav-item { color: white; text-decoration: none; font-size: 22px; opacity: 0.7; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { opacity: 1; transform: scale(1.2); }
 
         /* --- Modal (Popup) Styles --- */
         .modal-overlay {
             display: none; /* Hidden by default */
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
             z-index: 100;
             align-items: center;
             justify-content: center;
@@ -100,75 +114,90 @@
         }
 
         .modal-content {
-            background: var(--bg);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.4);
             border-radius: 20px;
             width: 100%;
             max-width: 400px;
-            padding: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            animation: slideUp 0.3s ease-out;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(50px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 15px;
         }
 
-        .modal-header h2 { margin: 0; font-size: 1.2rem; }
+        .modal-header h2 { margin: 0; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         
         .close-btn {
-            background: none;
-            border: none;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            opacity: 0.7;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
         }
-        .close-btn:hover { opacity: 1; color: #ff4757; }
+        .close-btn:hover { background: #ff4757; border-color: #ff4757; transform: rotate(90deg); }
 
         /* List inside Modal */
         .quiz-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             max-height: 60vh;
             overflow-y: auto;
         }
+        
+        /* Scrollbar છુપાવવા માટે */
+        .quiz-list::-webkit-scrollbar { width: 5px; }
+        .quiz-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 10px; }
 
         .quiz-item {
-            background: rgba(255,255,255,0.05);
-            padding: 12px 15px;
-            border-radius: 10px;
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 12px;
             text-decoration: none;
             color: white;
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-            border: 1px solid transparent;
+            gap: 15px;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .quiz-item:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--primary);
-            transform: translateX(5px);
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+            transform: translateX(8px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .quiz-item-icon { font-size: 1.2rem; }
+        .quiz-item-icon { font-size: 1.5rem; }
 
         /* Responsive */
         @media (max-width: 400px) {
-            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
         }
     </style>
 </head>
@@ -220,7 +249,8 @@
     </div>
 
     <div class="modal-overlay" id="quizModal" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()"> <div class="modal-header">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
                 <h2>📝 બધી ક્વિઝનું લિસ્ટ</h2>
                 <button class="close-btn" onclick="closeModal(event)">×</button>
             </div>
@@ -257,8 +287,7 @@
                     <span class="quiz-item-icon">📘</span>
                     <span>પરખ ક્વિજ-8</span>
                 </a>
-                
-                </div>
+            </div>
         </div>
     </div>
 
