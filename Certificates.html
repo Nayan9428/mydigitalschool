@@ -1,0 +1,492 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilingual Certificate Maker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rasa:wght@400;600;700&family=Noto+Serif+Gujarati:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #1a237e; /* School, Names, Body Text */
+            --border-color: #b71c1c;  /* Exam Name, Achievement, Border */
+            --bg-pattern: #fffdf5;
+        }
+
+        body {
+            font-family: 'Rasa', 'Merriweather', serif;
+            background-color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Control Panel */
+        .controls {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            max-width: 1100px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            font-family: 'Noto Serif Gujarati', serif;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            min-width: 200px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Noto Serif Gujarati', serif;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-pass { background-color: #4caf50; color: white; }
+        .btn-merit { background-color: #ff9800; color: white; }
+        .btn-jpg { background-color: #673ab7; color: white; }
+        .btn-png { background-color: #e91e63; color: white; }
+        
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+
+        /* Certificate Container */
+        .certificate-wrapper {
+            width: 1123px;
+            height: 794px;
+            background-color: var(--bg-pattern);
+            position: relative;
+            box-shadow: 0 0 25px rgba(0,0,0,0.15);
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .border-frame {
+            width: 100%;
+            height: 100%;
+            border: 8px double var(--border-color);
+            outline: 2px solid var(--border-color);
+            outline-offset: 5px;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: radial-gradient(#ddd 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+
+        /* Corners */
+        .corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-color: var(--primary-color);
+            border-style: solid;
+        }
+        .tl { top: 15px; left: 15px; border-width: 5px 0 0 5px; }
+        .tr { top: 15px; right: 15px; border-width: 5px 5px 0 0; }
+        .bl { bottom: 15px; left: 15px; border-width: 0 0 5px 5px; }
+        .br { bottom: 15px; right: 15px; border-width: 0 5px 5px 0; }
+
+        /* Content */
+        .header { text-align: center; }
+
+        .school-name {
+            font-family: 'Noto Serif Gujarati', 'Merriweather', serif;
+            font-size: 42px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin: 10px 0 5px 0;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* Taluka District Row Layout */
+        .taluka-district-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* REDUCED GAP FURTHER (Was 30px) */
+            margin-top: 15px;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Individual Block */
+        .td-block {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .td-input {
+            border: none;
+            background: transparent;
+            min-width: 150px;
+            display: inline-block;
+            text-align: left;
+            color: var(--primary-color);
+            outline: none;
+            cursor: text;
+        }
+
+        .main-title {
+            font-size: 60px;
+            color: var(--border-color);
+            margin: 20px 0 10px 0;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-style: double;
+            text-underline-offset: 8px;
+            font-family: 'Noto Serif Gujarati', 'Merriweather', serif;
+        }
+
+        .content-body {
+            text-align: center;
+            font-size: 28px;
+            line-height: 1.6;
+            color: #333;
+            margin: 10px 50px;
+            padding: 10px;
+        }
+
+        .student-name {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 3px dotted #555;
+            padding: 0 15px;
+            margin: 0 5px;
+            display: inline-block;
+            min-width: 350px;
+        }
+
+        .exam-name {
+            color: var(--border-color);
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+        /* New Class for Passed/Merit Text - Same color as Exam Name */
+        .achievement-text {
+            color: var(--border-color);
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            padding: 0 60px;
+            position: relative;
+        }
+
+        .date-section, .sign-section { 
+            text-align: center; 
+            z-index: 2;
+        }
+
+        .line {
+            width: 250px;
+            height: 2px;
+            background-color: #333;
+            margin-bottom: 8px;
+        }
+
+        .label { font-size: 24px; font-weight: bold; }
+
+        /* Medal Style */
+        .medal-icon {
+            font-size: 90px;
+            color: var(--border-color);
+            opacity: 0.5;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -5px;
+            z-index: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <label>ભાષા/Language:</label>
+        <select id="langSelect" onchange="updateLanguage()">
+            <option value="gu">ગુજરાતી</option>
+            <option value="en">English</option>
+        </select>
+
+        <label>પરીક્ષા:</label>
+        <select id="examSelect" onchange="updateExamOnly()">
+            </select>
+
+        <button class="btn btn-pass" onclick="setMode('pass')">પાસ (Pass)</button>
+        <button class="btn btn-merit" onclick="setMode('merit')">મેરિટ (Merit)</button>
+
+        <div style="border-left: 1px solid #ddd; padding-left: 10px; display:flex; gap:10px;">
+            <label>Font:</label>
+            <input type="color" id="primaryColor" value="#1a237e" oninput="updateColors()" title="ફોન્ટ કલર">
+        </div>
+        
+        <div style="border-left: 1px solid #ddd; padding-left: 10px; display:flex; gap:10px;">
+            <label>Border:</label>
+            <input type="color" id="borderColor" value="#b71c1c" oninput="updateColors()" title="બોર્ડર (અને પરીક્ષા/મેરિટ) કલર">
+        </div>
+
+        <div style="border-left: 1px solid #ddd; padding-left: 10px; display:flex; gap:10px;">
+            <button class="btn btn-jpg" onclick="downloadImage('jpg')">JPG</button>
+            <button class="btn btn-png" onclick="downloadImage('png')">PNG</button>
+        </div>
+    </div>
+
+    <div id="certificate-capture" class="certificate-wrapper">
+        <div class="border-frame">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+
+            <div class="header">
+                <div id="schoolName" class="school-name" contenteditable="true">[ તમારી શાળાનું નામ અહીં લખો ]</div>
+                
+                <div class="taluka-district-row">
+                    <div class="td-block">
+                        <span id="labelTaluka" class="td-label">તાલુકો:</span> 
+                        <span class="td-input" contenteditable="true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </div>
+                    
+                    <div class="td-block">
+                        <span id="labelDistrict" class="td-label">જિલ્લો:</span> 
+                        <span class="td-input" contenteditable="true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </div>
+                </div>
+
+                <h2 id="mainTitle" class="main-title">પ્રમાણપત્ર</h2>
+            </div>
+
+            <div class="content-body" id="mainContent">
+                </div>
+
+            <div class="footer">
+                <div class="date-section">
+                    <div id="labelDate" class="label" contenteditable="true">તારીખ: __/__/____</div>
+                </div>
+                
+                <div class="medal-icon">🏅</div>
+
+                <div class="sign-section">
+                    <div class="line"></div>
+                    <div id="labelSign" class="label">આચાર્યશ્રીની સહી</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'pass';
+        let currentLang = 'gu';
+
+        const translations = {
+            gu: {
+                schoolPlaceholder: "[ તમારી શાળાનું નામ અહીં લખો ]",
+                labelTaluka: "તાલુકો:",
+                labelDistrict: "જિલ્લો:",
+                title: "પ્રમાણપત્ર",
+                date: "તારીખ: __/__/____",
+                sign: "આચાર્યશ્રીની સહી",
+                orgDefault: "રાજ્ય પરીક્ષા બોર્ડ, ગાંધીનગર",
+                examDefault: "NMMS પરીક્ષા",
+                studentPlaceholder: "વિદ્યાર્થીનું નામ",
+                customOption: "-- જાતે લખો (Custom) --",
+                exams: [
+                    "NMMS પરીક્ષા",
+                    "PSE (પ્રાથમિક શિષ્યવૃત્તિ)",
+                    "SSE (માધ્યમિક શિષ્યવૃત્તિ)",
+                    "જ્ઞાન સાધના સ્કોલરશિપ",
+                    "CET (કોમન એન્ટ્રન્સ ટેસ્ટ)",
+                    "જવાહર નવોદય વિદ્યાલય",
+                    "ચિત્રકામ પરીક્ષા",
+                    "રમત-ગમત સ્પર્ધા"
+                ]
+            },
+            en: {
+                schoolPlaceholder: "[ Enter School Name Here ]",
+                labelTaluka: "Taluka:",
+                labelDistrict: "District:",
+                title: "CERTIFICATE",
+                date: "Date: __/__/____",
+                sign: "Principal's Sign",
+                orgDefault: "State Examination Board, Gandhinagar",
+                examDefault: "NMMS Exam",
+                studentPlaceholder: "Student Name",
+                customOption: "-- Custom (Write manually) --",
+                exams: [
+                    "NMMS Exam",
+                    "PSE (Primary Scholarship)",
+                    "SSE (Secondary Scholarship)",
+                    "Gyan Sadhana Scholarship",
+                    "CET (Common Entrance Test)",
+                    "Jawahar Navodaya Vidyalaya",
+                    "Drawing Exam",
+                    "Sports Competition"
+                ]
+            }
+        };
+
+        function populateExamDropdown() {
+            const select = document.getElementById('examSelect');
+            select.innerHTML = "";
+            
+            const t = translations[currentLang];
+            t.exams.forEach(exam => {
+                const option = document.createElement("option");
+                option.value = exam;
+                option.text = exam;
+                select.appendChild(option);
+            });
+
+            const customOpt = document.createElement("option");
+            customOpt.value = "custom";
+            customOpt.text = t.customOption;
+            select.appendChild(customOpt);
+        }
+
+        function updateContent() {
+            const contentDiv = document.getElementById('mainContent');
+            
+            const studentName = document.querySelector('.student-name') ? document.querySelector('.student-name').innerText : translations[currentLang].studentPlaceholder;
+            const orgName = document.getElementById('orgName') ? document.getElementById('orgName').innerText : translations[currentLang].orgDefault;
+            
+            const dropdown = document.getElementById('examSelect');
+            let examName = "";
+            
+            if (dropdown.value === 'custom') {
+                 const existingDisplay = document.getElementById('examDisplay');
+                 if(existingDisplay && existingDisplay.innerText !== translations['gu'].examDefault && existingDisplay.innerText !== translations['en'].examDefault) {
+                     examName = existingDisplay.innerText;
+                 } else {
+                     examName = currentLang === 'gu' ? '[ અહીં પરીક્ષાનું નામ લખો ]' : '[ Write Exam Name Here ]';
+                 }
+            } else {
+                examName = dropdown.value;
+            }
+
+            if (currentLang === 'gu') {
+                if (currentMode === 'pass') {
+                    contentDiv.innerHTML = `
+                        આથી પ્રમાણપત્ર આપવામાં આવે છે કે <span class="student-name" contenteditable="true">${studentName}</span> એ 
+                        <span id="orgName" contenteditable="true" style="border-bottom:1px dashed #999;">${orgName}</span> દ્વારા લેવામાં આવેલ 
+                        <span id="examDisplay" class="exam-name" contenteditable="true">${examName}</span> માં 
+                        શ્રેષ્ઠ પ્રદર્શન કરી <span class="achievement-text">ઉત્તીર્ણ થયેલ છે</span>. આપની આ ઉજ્જવળ સફળતા બદલ શાળા પરિવાર અને ગ્રામજનો ગર્વ અનુભવે છે. 
+                        આપ ભવિષ્યમાં ઉત્તરોત્તર પ્રગતિ કરો અને શૈક્ષણિક ક્ષેત્રે ઉચ્ચ શિખરો સર કરો તેવી હાર્દિક શુભકામનાઓ પાઠવીએ છીએ.
+                    `;
+                } else {
+                    contentDiv.innerHTML = `
+                        આથી ગૌરવભેર પ્રમાણપત્ર એનાયત કરવામાં આવે છે કે <span class="student-name" contenteditable="true">${studentName}</span> એ 
+                        <span id="orgName" contenteditable="true" style="border-bottom:1px dashed #999;">${orgName}</span> દ્વારા લેવામાં આવેલ 
+                        <span id="examDisplay" class="exam-name" contenteditable="true">${examName}</span> માં 
+                        <span class="achievement-text">મેરિટમાં સ્થાન પ્રાપ્ત કરી</span> શાળા તથા ગામનું નામ રોશન કર્યું છે. આપની આ ઉજ્જવળ સફળતા બદલ સમગ્ર શાળા પરિવાર ગર્વ અનુભવે છે. 
+                        આપ શૈક્ષણિક ક્ષેત્રે ઉચ્ચ શિખરો સર કરો તેવી હાર્દિક શુભકામનાઓ પાઠવીએ છીએ.
+                    `;
+                }
+            } else {
+                if (currentMode === 'pass') {
+                    contentDiv.innerHTML = `
+                        This is to certify that <span class="student-name" contenteditable="true">${studentName}</span> has <span class="achievement-text">successfully passed</span> the 
+                        <span id="examDisplay" class="exam-name" contenteditable="true">${examName}</span> conducted by 
+                        <span id="orgName" contenteditable="true" style="border-bottom:1px dashed #999;">${orgName}</span>. 
+                        The school family and villagers are proud of your bright success. We wish you continued progress in the future and hope you achieve new heights in the field of education.
+                    `;
+                } else {
+                    contentDiv.innerHTML = `
+                        This is to proudly certify that <span class="student-name" contenteditable="true">${studentName}</span> has secured a position in the 
+                        <span class="achievement-text">Merit List</span> of the 
+                        <span id="examDisplay" class="exam-name" contenteditable="true">${examName}</span> conducted by 
+                        <span id="orgName" contenteditable="true" style="border-bottom:1px dashed #999;">${orgName}</span>. 
+                        The entire school family is proud of your brilliant achievement and wishes you the best for scaling greater heights in your educational journey.
+                    `;
+                }
+            }
+        }
+
+        function updateLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            const t = translations[currentLang];
+            
+            populateExamDropdown();
+            
+            document.getElementById('schoolName').innerText = t.schoolPlaceholder;
+            document.getElementById('labelTaluka').innerText = t.labelTaluka;
+            document.getElementById('labelDistrict').innerText = t.labelDistrict;
+            document.getElementById('mainTitle').innerText = t.title;
+            document.getElementById('labelDate').innerText = t.date;
+            document.getElementById('labelSign').innerText = t.sign;
+            
+            updateContent();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            updateContent();
+        }
+
+        function updateExamOnly() {
+            updateContent();
+        }
+
+        function updateColors() {
+            const primary = document.getElementById('primaryColor').value;
+            const border = document.getElementById('borderColor').value;
+            document.documentElement.style.setProperty('--primary-color', primary);
+            document.documentElement.style.setProperty('--border-color', border);
+        }
+
+        function downloadImage(format) {
+            const element = document.getElementById("certificate-capture");
+            html2canvas(element, {
+                scale: 3, 
+                useCORS: true,
+                backgroundColor: "#fffdf5"
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Certificate_${currentLang}_${currentMode}.${format}`;
+                link.href = canvas.toDataURL(format === 'jpg' ? "image/jpeg" : "image/png", 0.9);
+                link.click();
+            });
+        }
+
+        updateLanguage();
+    </script>
+</body>
+</html>

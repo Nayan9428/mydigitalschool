@@ -1,0 +1,449 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ગણિતની ગમ્મત - સરવાળો</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap'); /* બાળકો માટે ફોન્ટ */
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            font-family: 'Arial', sans-serif; /* ફોલબેક ફોન્ટ */
+            touch-action: none;
+        }
+
+        /* --- Start Screen (Toys Theme) --- */
+        #start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFEBEE 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background-image: radial-gradient(#FFC107 10%, transparent 11%), radial-gradient(#FF9800 10%, transparent 11%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+        
+        #toy-box {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            border: 8px dashed #FF5722;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 90%;
+            width: 350px;
+            position: relative;
+        }
+
+        #toy-box h1 {
+            color: #2196F3;
+            font-size: 32px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px #FFEB3B;
+        }
+
+        .decoration {
+            font-size: 40px;
+            position: absolute;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 18px;
+            margin: 10px 0;
+            border: 3px solid #4CAF50;
+            border-radius: 15px;
+            width: 80%;
+            text-align: center;
+            outline: none;
+            background: #F1F8E9;
+            color: #333;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: #E91E63;
+            transform: scale(1.05);
+        }
+
+        /* Start Button */
+        .start-btn {
+            background: #FF4081;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 5px #C2185B;
+            transition: 0.1s;
+            font-weight: bold;
+        }
+        .start-btn:active {
+            box-shadow: 0 2px #C2185B;
+            transform: translateY(3px);
+        }
+
+        /* --- Game UI --- */
+        #game-container {
+            display: none;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #question-box {
+            position: absolute;
+            top: 20px; left: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            background: #333;
+            padding: 10px 25px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            z-index: 10;
+            border: 2px solid white;
+        }
+
+        #info-panel {
+            position: absolute;
+            top: 20px; right: 20px;
+            text-align: right;
+            z-index: 10;
+        }
+        .info-tag {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #333;
+            border: 2px solid #2196F3;
+            display: inline-block;
+        }
+
+        #shooter {
+            position: absolute;
+            bottom: 20px; right: 20px;
+            font-size: 60px;
+            z-index: 5;
+            transform: rotate(-45deg);
+            filter: drop-shadow(2px 4px 6px black);
+        }
+
+        /* --- 3D Balloons --- */
+        .balloon {
+            position: absolute;
+            bottom: -120px;
+            width: 70px; height: 85px;
+            border-radius: 80% 80% 80% 80% / 80% 80% 90% 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            cursor: pointer;
+            user-select: none;
+            background-color: var(--bg-color); 
+            background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), 5px 10px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+            z-index: 2;
+        }
+        .balloon::after {
+            content: ''; position: absolute; bottom: -6px; left: 50%;
+            transform: translateX(-50%); border-left: 6px solid transparent;
+            border-right: 6px solid transparent; border-bottom: 10px solid var(--bg-color);
+        }
+        .balloon::before {
+            content: ''; position: absolute; bottom: -50px; left: 50%;
+            transform: translateX(-50%); width: 1px; height: 45px;
+            background: rgba(50, 50, 50, 0.6); z-index: -1;
+        }
+
+        /* --- Arrow --- */
+        .arrow {
+            position: absolute; width: 50px; height: 4px;
+            background: #222; z-index: 4; display: none;
+            transform-origin: center left; border-radius: 2px;
+        }
+        .arrow::before {
+            content: ''; position: absolute; right: -10px; top: -4px;
+            border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+            border-left: 12px solid #222;
+        }
+
+        /* --- Winning Screen --- */
+        #winning-screen {
+            display: none;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white; padding: 30px; text-align: center;
+            border-radius: 20px; border: 5px solid #FFD700;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+            z-index: 50; width: 80%; max-width: 400px;
+        }
+        #joker {
+            font-size: 80px; animation: bounce 0.6s infinite alternate;
+            display: block; margin: 10px auto;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-30px); }
+        }
+
+        /* Shake Animation */
+        .shake { animation: shake 0.4s; }
+        @keyframes shake {
+            0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); } 75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen">
+        <div id="toy-box">
+            <span class="decoration" style="top: -20px; left: -20px;">🚂</span>
+            <span class="decoration" style="top: -20px; right: -20px;">🧸</span>
+            <span class="decoration" style="bottom: -20px; left: -20px;">🚗</span>
+            <span class="decoration" style="bottom: -20px; right: -20px;">⚽</span>
+
+            <h1>🎈 ગણિતની ગમ્મત 🎈</h1>
+            <p style="color: #555; font-size: 14px;">ધોરણ 1 અને 2 માટે</p>
+            
+            <input type="text" id="studentName" placeholder="તમારું નામ 🧒" required autocomplete="off">
+            <input type="text" id="schoolName" placeholder="શાળાનું નામ 🏫" required autocomplete="off">
+            
+            <button class="start-btn" onclick="submitDetails()">રમો ▶</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        
+        <div id="info-panel">
+            <div class="info-tag" id="display-name">બાળક</div><br>
+            <div class="info-tag" id="display-school" style="font-size: 14px;">શાળા</div><br>
+            <div class="info-tag" style="background: #FFEB3B; font-size: 22px; border-color: orange;">પોઈન્ટ્સ: <span id="score">0</span></div>
+        </div>
+        
+        <div id="question-box">
+            <span id="question-text">? + ? = ?</span>
+        </div>
+
+        <div id="winning-screen">
+            <span id="joker">🤡</span>
+            <h2 style="color: #4CAF50;">અભિનંદન! <span id="winner-name"></span></h2>
+            <p>તમે 300 પોઈન્ટ્સ મેળવી લીધા!</p>
+            <button class="start-btn" onclick="location.reload()">ફરીથી રમો</button>
+        </div>
+
+        <div id="arrow" class="arrow"></div>
+
+        <div id="shooter">🏹</div>
+    </div>
+
+<script>
+    let playerName = "";
+    let schoolName = "";
+    let score = 0;
+    let currentAnswer = 0;
+    let gameInterval;
+    let isGameRunning = false;
+    let balloons = [];
+    
+    // વાઈબ્રન્ટ રંગો
+    const balloonColors = ['#FF1744', '#D500F9', '#651FFF', '#3D5AFE', '#00B0FF', '#00E676', '#FFEA00', '#FF9100', '#FF3D00'];
+
+    const startScreen = document.getElementById('start-screen');
+    const gameContainer = document.getElementById('game-container');
+    const questionText = document.getElementById('question-text');
+    const scoreEl = document.getElementById('score');
+    const shooter = document.getElementById('shooter');
+    const arrow = document.getElementById('arrow');
+    const winningScreen = document.getElementById('winning-screen');
+
+    function submitDetails() {
+        const nameInput = document.getElementById('studentName').value;
+        const schoolInput = document.getElementById('schoolName').value;
+
+        if (nameInput.trim() === "" || schoolInput.trim() === "") {
+            alert("કૃપા કરીને તમારું નામ અને શાળાનું નામ લખો!");
+            return;
+        }
+
+        playerName = nameInput;
+        schoolName = schoolInput;
+
+        document.getElementById('display-name').innerText = "ખેલાડી: " + playerName;
+        document.getElementById('display-school').innerText = schoolName;
+        document.getElementById('winner-name').innerText = playerName;
+
+        startScreen.style.display = 'none';
+        gameContainer.style.display = 'block';
+
+        startGame();
+    }
+
+    function startGame() {
+        score = 0;
+        scoreEl.innerText = score;
+        isGameRunning = true;
+        generateQuestion();
+        
+        // ફુગ્ગા ચેક કરવાનો સમય (ઝડપી લૂપ જેથી સ્પેસ મળે તો તરત ફુગ્ગો આવે)
+        gameInterval = setInterval(spawnBalloon, 500);
+        requestAnimationFrame(updateGame);
+    }
+
+    function generateQuestion() {
+        let num1 = Math.floor(Math.random() * 9) + 1;
+        let num2 = Math.floor(Math.random() * 9) + 1;
+        while(num1 + num2 > 20) { num2 = Math.floor(Math.random() * 5) + 1; }
+        currentAnswer = num1 + num2;
+        questionText.innerText = `${num1} + ${num2} = ?`;
+    }
+
+    function spawnBalloon() {
+        if (!isGameRunning) return;
+
+        // અહીં ફુગ્ગાની સંખ્યા મર્યાદિત કરી છે (3 થી વધુ નહીં)
+        if (balloons.length >= 3) {
+            return;
+        }
+
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        
+        const randomColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+        balloon.style.setProperty('--bg-color', randomColor);
+        
+        let leftPos = Math.random() * (window.innerWidth - 150); 
+        balloon.style.left = leftPos + 'px';
+        
+        let balloonNum;
+        if (Math.random() < 0.45) { 
+            balloonNum = currentAnswer;
+        } else {
+            do {
+                balloonNum = Math.floor(Math.random() * 20) + 1;
+            } while (balloonNum === currentAnswer);
+        }
+        balloon.innerText = balloonNum;
+        
+        balloon.onclick = function() { checkAnswer(balloon, balloonNum); };
+        balloon.ontouchstart = function() { checkAnswer(balloon, balloonNum); };
+
+        gameContainer.appendChild(balloon);
+        
+        // સ્પીડ વધારી છે (2.5 થી 4.5 ની વચ્ચે)
+        balloons.push({
+            element: balloon,
+            speed: Math.random() * 2.0 + 2.5 
+        });
+    }
+
+    function checkAnswer(targetBalloon, number) {
+        if(!isGameRunning) return;
+
+        if (number === currentAnswer) {
+            shootArrow(targetBalloon);
+        } else {
+            score -= 10;
+            scoreEl.innerText = score;
+            scoreEl.style.color = "red";
+            setTimeout(() => scoreEl.style.color = "black", 500);
+
+            targetBalloon.classList.add('shake');
+            setTimeout(() => targetBalloon.classList.remove('shake'), 400);
+        }
+    }
+
+    function shootArrow(targetBalloon) {
+        const shooterRect = shooter.getBoundingClientRect();
+        const balloonRect = targetBalloon.getBoundingClientRect();
+
+        arrow.style.display = 'block';
+        arrow.style.transition = 'none';
+        
+        arrow.style.left = (shooterRect.left) + 'px';
+        arrow.style.top = (shooterRect.top + 30) + 'px';
+
+        const deltaX = balloonRect.left - shooterRect.left;
+        const deltaY = balloonRect.top - shooterRect.top;
+        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        arrow.style.transform = `rotate(${angle}deg)`;
+
+        // તીર પણ ઝડપથી જશે
+        setTimeout(() => {
+            arrow.style.transition = 'top 0.2s linear, left 0.2s linear';
+            arrow.style.left = (balloonRect.left + 20) + 'px';
+            arrow.style.top = (balloonRect.top + 40) + 'px';
+        }, 10);
+
+        setTimeout(() => {
+            arrow.style.display = 'none';
+            score += 10;
+            scoreEl.innerText = score;
+
+            targetBalloon.innerText = "✨";
+            targetBalloon.style.transform = "scale(1.5)";
+            targetBalloon.style.backgroundImage = "none";
+            targetBalloon.style.backgroundColor = "transparent";
+            targetBalloon.style.boxShadow = "none";
+            targetBalloon.style.setProperty('--bg-color', 'transparent');
+            
+            setTimeout(() => {
+                targetBalloon.remove();
+                balloons = balloons.filter(b => b.element !== targetBalloon);
+            }, 100);
+
+            if (score >= 300) {
+                gameWin();
+            } else {
+                generateQuestion();
+            }
+        }, 210);
+    }
+
+    function gameWin() {
+        isGameRunning = false;
+        clearInterval(gameInterval);
+        balloons.forEach(b => b.element.remove());
+        balloons = [];
+        winningScreen.style.display = 'block';
+        document.body.style.background = "linear-gradient(to bottom, #FFF176, #FFAB91)";
+    }
+
+    function updateGame() {
+        if (!isGameRunning) return;
+
+        for (let i = 0; i < balloons.length; i++) {
+            let b = balloons[i];
+            let currentBottom = parseFloat(b.element.style.bottom) || -120;
+            let newBottom = currentBottom + b.speed;
+            b.element.style.bottom = newBottom + 'px';
+
+            if (newBottom > window.innerHeight) {
+                b.element.remove();
+                balloons.splice(i, 1);
+                i--;
+            }
+        }
+        requestAnimationFrame(updateGame);
+    }
+</script>
+
+</body>
+</html>
