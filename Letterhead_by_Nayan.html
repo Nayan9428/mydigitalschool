@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>શાળાનું લેટરપેડ PRO - નયન પ્રજાપતિ</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;800&family=Rasa:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Required Libraries (for PDF/4K Image) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root{
+      --banner-bg: linear-gradient(135deg,#1e3a8a,#3b82f6);
+      --name-color:#fff;
+      --text-color:#fff;
+    }
+    body{
+      margin:0;
+      padding:18px;
+      background:#eef2f6;
+      font-family:'Noto Sans Gujarati', sans-serif;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+    }
+    .topbar{
+      width:min(1200px,100%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+    }
+    .title{
+      font-size:24px;
+      font-weight:800;
+      color:#0f172a;
+      text-align:center;
+    }
+    .credit{
+      font-size:13px;
+      font-weight:800;
+      color:#475569;
+      text-align:center;
+    }
+
+    .admin{
+      width:min(1200px,100%);
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.08);
+      border-top:6px solid #1e3a8a;
+      padding:18px;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:12px;
+    }
+    .sec-title{
+      grid-column: 1 / -1;
+      font-weight:800;
+      color:#0f172a;
+      letter-spacing:.5px;
+      padding-top:6px;
+      margin-top:6px;
+      border-top:2px dashed #e2e8f0;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    label{
+      font-size:12px;
+      font-weight:700;
+      color:#334155;
+    }
+    input,select,textarea{
+      padding:10px;
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      outline:none;
+      font-size:14px;
+      font-family:'Noto Sans Gujarati', sans-serif;
+      background:#fff;
+    }
+    textarea{
+      min-height:120px;
+      font-family:'Rasa', serif;
+      font-size:18px;
+      line-height:1.5;
+    }
+    .row2{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .row2 input[type="text"]{ flex:1; }
+    input[type="color"]{
+      padding:0;
+      height:40px;
+      width:48px;
+      border-radius:10px;
+    }
+    input[type="range"]{ width:100%; }
+
+    .btnbar{
+      grid-column:1/-1;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap:10px;
+      margin-top:8px;
+    }
+    button{
+      padding:12px 14px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      color:#fff;
+      font-weight:800;
+      font-size:15px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .b-save{ background:linear-gradient(135deg,#0f766e,#14b8a6); }
+    .b-load{ background:linear-gradient(135deg,#1d4ed8,#60a5fa); }
+    .b-clear{ background:linear-gradient(135deg,#6b7280,#111827); }
+    .b-img{ background:linear-gradient(135deg,#15803d,#22c55e); }
+    .b-pdf{ background:linear-gradient(135deg,#b91c1c,#ef4444); }
+    .b-print{ background:linear-gradient(135deg,#0f172a,#334155); }
+
+    /* Letterhead Preview */
+    #letterhead{
+      width:210mm;
+      height:297mm;
+      background:#fff;
+      box-shadow:0 12px 40px rgba(0,0,0,.18);
+      border:1px solid #d1d5db;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .wm{
+      position:absolute;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      pointer-events:none;
+      z-index:0;
+    }
+    #out-watermark{
+      width:60%;
+      opacity:.10;
+      filter:grayscale(100%);
+      display:none;
+    }
+
+    .header{
+      z-index:1;
+      background:var(--banner-bg);
+      color:var(--text-color);
+      padding:18px 24px;
+      text-align:center;
+    }
+    .tagline{
+      font-family:'Rasa', serif;
+      font-weight:600;
+      font-size:18px;
+      margin-bottom:6px;
+    }
+    .headgrid{
+      display:grid;
+      grid-template-columns: 120px 1fr 120px;
+      align-items:center;
+      gap:12px;
+      min-height:110px;
+    }
+    .logoSlot{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:110px;
+    }
+    .logoSlot img{
+      max-width:110px;
+      max-height:110px;
+      object-fit:contain;
+      display:none;
+    }
+    .schoolName{
+      margin:0;
+      font-family:'Rasa', serif;
+      font-size:40px;
+      color:var(--name-color);
+      font-weight:800;
+      line-height:1.1;
+      text-shadow:1px 1px 4px rgba(0,0,0,.25);
+    }
+    .loc{
+      margin:6px 0 0 0;
+      font-family:'Rasa', serif;
+      font-size:18px;
+      font-weight:700;
+    }
+    .details{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:10px;
+      font-family:'Rasa', serif;
+      font-size:14px;
+      border-top:1px solid rgba(255,255,255,.35);
+      padding-top:10px;
+    }
+    .details b{ font-weight:800; }
+    .details .left{ text-align:left; }
+    .details .right{ text-align:right; }
+
+    .refrow{
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      padding:14px 28px 10px 28px;
+      font-family:'Rasa', serif;
+      font-size:18px;
+      font-weight:800;
+      color:#111827;
+      border-bottom:2px solid #eef2f6;
+      margin:10px 10px 0 10px;
+    }
+
+    .content{
+      z-index:1;
+      flex:1;
+      padding:12px 32px;
+      font-family:'Rasa', serif;
+      font-size:20px;
+      line-height:1.7;
+      color:#000;
+      white-space:pre-wrap;
+      text-align:justify;
+    }
+
+    .signBox{
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      padding:0 32px 10px 32px;
+      margin-top:4px;
+    }
+    #out-sig{
+      width:160px;
+      height:70px;
+      object-fit:contain;
+      display:none;
+      margin-bottom:6px;
+    }
+    .signLabel{
+      width:200px;
+      text-align:center;
+      font-family:'Rasa', serif;
+      font-size:18px;
+      font-weight:800;
+      border-top:2px solid #111827;
+      padding-top:4px;
+    }
+
+    .footer{
+      z-index:1;
+      background:var(--banner-bg);
+      color:var(--text-color);
+      text-align:center;
+      padding:12px;
+      font-family:'Rasa', serif;
+      font-weight:700;
+      font-size:16px;
+    }
+    .proCredit{
+      z-index:1;
+      text-align:center;
+      font-size:12px;
+      color:#475569;
+      font-weight:900;
+      padding:8px 0 12px 0;
+    }
+
+    @media print{
+      body{ background:#fff; padding:0; }
+      .admin,.topbar{ display:none; }
+      #letterhead{ box-shadow:none; border:none; }
+      .proCredit{ display:none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="title">🏫 શાળાનું લેટરપેડ (PRO)</div>
+    <div class="credit">બનાવનાર : નયન પ્રજાપતિ | 9428557415</div>
+  </div>
+
+  <div class="admin">
+    <div class="sec-title">🎨 Theme / Colors</div>
+
+    <div class="field">
+      <label>Theme પસંદ કરો</label>
+      <select id="themeDropdown"></select>
+    </div>
+
+    <div class="field">
+      <label>School Name Color</label>
+      <input type="color" id="in-name-col" value="#ffffff">
+    </div>
+
+    <div class="field">
+      <label>Header Text Color</label>
+      <input type="color" id="in-txt-col" value="#ffffff">
+    </div>
+
+    <div class="sec-title">🖼️ Logo / Watermark / Sign</div>
+
+    <div class="field">
+      <label>Left Logo</label>
+      <input type="file" id="in-logo-left" accept="image/*">
+    </div>
+    <div class="field">
+      <label>Right Logo</label>
+      <input type="file" id="in-logo-right" accept="image/*">
+    </div>
+    <div class="field">
+      <label>Watermark</label>
+      <input type="file" id="in-watermark" accept="image/*">
+    </div>
+    <div class="field">
+      <label>Watermark Opacity</label>
+      <input type="range" id="in-opacity" min="0" max="0.4" step="0.01" value="0.10">
+    </div>
+    <div class="field">
+      <label>Signature</label>
+      <input type="file" id="in-sig" accept="image/*">
+    </div>
+
+    <div class="sec-title">📝 Header / Details</div>
+
+    <div class="field" style="grid-column: 1 / -1;">
+      <label>Top Tagline</label>
+      <input type="text" id="in-tag" value="જિલ્લા પંચાયત શિક્ષણ સમિતિ સંચાલિત">
+    </div>
+
+    <div class="field" style="grid-column: 1 / -1;">
+      <label>School Name</label>
+      <input type="text" id="in-name" value="શ્રી સરકારી પ્રાથમિક શાળા">
+    </div>
+
+    <div class="field">
+      <label>Taluka</label>
+      <input type="text" id="in-tal" placeholder="Taluka">
+    </div>
+    <div class="field">
+      <label>District</label>
+      <input type="text" id="in-dist" placeholder="District">
+    </div>
+
+    <div class="field">
+      <label>DISE Code</label>
+      <input type="text" id="in-dice" placeholder="----------">
+    </div>
+    <div class="field">
+      <label>Est Date</label>
+      <input type="text" id="in-est" placeholder="----------">
+    </div>
+    <div class="field">
+      <label>Mobile</label>
+      <input type="text" id="in-mo" placeholder="----------">
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="text" id="in-mail" placeholder="----------">
+    </div>
+
+    <div class="field">
+      <label>Javak No</label>
+      <input type="text" id="in-jnum" placeholder="__________">
+    </div>
+    <div class="field">
+      <label>Date</label>
+      <input type="date" id="in-date">
+    </div>
+
+    <div class="sec-title">📄 Letter Content</div>
+
+    <div class="field" style="grid-column: 1 / -1;">
+      <label>Letter Content (આહીં લખો)</label>
+      <textarea id="in-content">અહીં તમારો પત્ર લખો...</textarea>
+    </div>
+
+    <div class="field" style="grid-column: 1 / -1;">
+      <label>Footer Text</label>
+      <input type="text" id="in-foot" value="શાળાનું સરનામું અને પિનકોડ અહીં લખી શકાય.">
+    </div>
+
+    <div class="btnbar">
+      <button class="b-save" id="btnSave">💾 Save Template</button>
+      <button class="b-load" id="btnLoad">📂 Load Template</button>
+      <button class="b-clear" id="btnClear">🧹 Clear</button>
+      <button class="b-img" id="btnImg">🖼️ 4K Photo</button>
+      <button class="b-pdf" id="btnPdf">📄 PDF</button>
+      <button class="b-print" id="btnPrint">🖨️ Print</button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div id="letterhead">
+    <div class="wm">
+      <img id="out-watermark" alt="watermark"/>
+    </div>
+
+    <div class="header" id="out-header">
+      <div class="tagline" id="out-tag">જિલ્લા પંચાયત શિક્ષણ સમિતિ સંચાલિત</div>
+      <div class="headgrid">
+        <div class="logoSlot"><img id="out-logo-left" alt="logo-left"></div>
+        <div>
+          <h1 class="schoolName" id="out-name">શ્રી સરકારી પ્રાથમિક શાળા</h1>
+          <p class="loc">તાલુકો: <span id="out-tal">______</span>, જિલ્લો: <span id="out-dist">______</span></p>
+        </div>
+        <div class="logoSlot"><img id="out-logo-right" alt="logo-right"></div>
+      </div>
+
+      <div class="details">
+        <div class="left">
+          <b>ડાયસ કોડ :</b> <span id="out-dice">----------</span><br>
+          <b>સ્થાપના તા. :</b> <span id="out-est">----------</span>
+        </div>
+        <div class="right">
+          <b>મોબાઇલ નં. :</b> <span id="out-mo">----------</span><br>
+          <b>ઇ-મેઇલ :</b> <span id="out-mail">----------</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="refrow">
+      <div>જાવક નંબર : <span id="out-jnum">__________</span></div>
+      <div>તારીખ : <span id="out-date">____-____-_______</span></div>
+    </div>
+
+    <div class="content" id="out-content">અહીં તમારો પત્ર લખો...</div>
+
+    <div class="signBox">
+      <img id="out-sig" alt="signature">
+      <div class="signLabel">આચાર્યશ્રીની સહી</div>
+    </div>
+
+    <div class="footer" id="out-foot">શાળાનું સરનામું અને પિનકોડ અહીં લખી શકાય.</div>
+    <div class="proCredit">બનાવનાર : નયન પ્રજાપતિ | 9428557415</div>
+  </div>
+
+<script>
+  const STORAGE_KEY = "LETTERHEAD_PRO_NAYAN_V1";
+
+  const themes = [
+    {name:"Royal Blue", bg:"linear-gradient(135deg,#1e3a8a,#3b82f6)", txt:"#ffffff"},
+    {name:"Teal", bg:"linear-gradient(135deg,#0f766e,#14b8a6)", txt:"#ffffff"},
+    {name:"Green", bg:"linear-gradient(135deg,#14532d,#22c55e)", txt:"#ffffff"},
+    {name:"Maroon", bg:"linear-gradient(135deg,#7f1d1d,#dc2626)", txt:"#ffffff"},
+    {name:"Purple", bg:"linear-gradient(135deg,#581c87,#a855f7)", txt:"#ffffff"},
+    {name:"Black", bg:"linear-gradient(135deg,#0b1220,#334155)", txt:"#ffffff"},
+    {name:"White (Blue Text)", bg:"#ffffff", txt:"#1e3a8a"}
+  ];
+
+  function $(id){ return document.getElementById(id); }
+
+  function setVars(bg, txt){
+    document.documentElement.style.setProperty("--banner-bg", bg);
+    document.documentElement.style.setProperty("--name-color", txt);
+    document.documentElement.style.setProperty("--text-color", txt);
+  }
+
+  function formatDateToDDMMYYYY(iso){
+    if(!iso) return "____-____-_______";
+    const d = new Date(iso);
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yy = d.getFullYear();
+    return `${dd}-${mm}-${yy}`;
+  }
+
+  function syncToPreview(){
+    $("out-tag").innerText = $("in-tag").value || "";
+    $("out-name").innerText = $("in-name").value || "શ્રી સરકારી પ્રાથમિક શાળા";
+    $("out-tal").innerText = $("in-tal").value || "______";
+    $("out-dist").innerText = $("in-dist").value || "______";
+    $("out-dice").innerText = $("in-dice").value || "----------";
+    $("out-est").innerText = $("in-est").value || "----------";
+    $("out-mo").innerText = $("in-mo").value || "----------";
+    $("out-mail").innerText = $("in-mail").value || "----------";
+    $("out-jnum").innerText = $("in-jnum").value || "__________";
+    $("out-date").innerText = formatDateToDDMMYYYY($("in-date").value);
+    $("out-content").innerText = $("in-content").value || "";
+    $("out-foot").innerText = $("in-foot").value || "";
+
+    // manual colors
+    const nameCol = $("in-name-col").value;
+    const txtCol = $("in-txt-col").value;
+    document.documentElement.style.setProperty("--name-color", nameCol);
+    document.documentElement.style.setProperty("--text-color", txtCol);
+
+    // watermark opacity
+    const op = $("in-opacity").value;
+    $("out-watermark").style.opacity = op;
+  }
+
+  function bindLive(){
+    const ids = [
+      "in-tag","in-name","in-tal","in-dist","in-dice","in-est","in-mo","in-mail",
+      "in-jnum","in-date","in-content","in-foot","in-name-col","in-txt-col","in-opacity"
+    ];
+    ids.forEach(id=>{
+      $(id).addEventListener("input", syncToPreview);
+      $(id).addEventListener("change", syncToPreview);
+    });
+  }
+
+  function loadImage(inputEl, outImgId){
+    const file = inputEl.files && inputEl.files[0];
+    if(!file) return;
+    const img = $(outImgId);
+    const url = URL.createObjectURL(file);
+    img.src = url;
+    img.style.display = "block";
+  }
+
+  function populateThemes(){
+    const sel = $("themeDropdown");
+    sel.innerHTML = "";
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = "-- Theme પસંદ કરો --";
+    sel.appendChild(opt0);
+
+    themes.forEach((t, i)=>{
+      const o = document.createElement("option");
+      o.value = i;
+      o.textContent = (i+1) + ". " + t.name;
+      sel.appendChild(o);
+    });
+
+    sel.addEventListener("change", ()=>{
+      const idx = sel.value;
+      if(idx === "") return;
+      const t = themes[Number(idx)];
+      setVars(t.bg, t.txt);
+      $("in-name-col").value = t.txt;
+      $("in-txt-col").value = t.txt;
+      syncToPreview();
+    });
+  }
+
+  function getFormData(){
+    return {
+      themeIndex: $("themeDropdown").value,
+      nameCol: $("in-name-col").value,
+      txtCol: $("in-txt-col").value,
+
+      tag: $("in-tag").value,
+      name: $("in-name").value,
+      tal: $("in-tal").value,
+      dist: $("in-dist").value,
+
+      dice: $("in-dice").value,
+      est: $("in-est").value,
+      mo: $("in-mo").value,
+      mail: $("in-mail").value,
+
+      jnum: $("in-jnum").value,
+      date: $("in-date").value,
+
+      content: $("in-content").value,
+      foot: $("in-foot").value,
+
+      opacity: $("in-opacity").value,
+
+      // images cannot be stored in localStorage reliably (files), so not saving images here
+    };
+  }
+
+  function setFormData(d){
+    if(!d) return;
+
+    $("in-tag").value = d.tag ?? $("in-tag").value;
+    $("in-name").value = d.name ?? $("in-name").value;
+    $("in-tal").value = d.tal ?? "";
+    $("in-dist").value = d.dist ?? "";
+    $("in-dice").value = d.dice ?? "";
+    $("in-est").value = d.est ?? "";
+    $("in-mo").value = d.mo ?? "";
+    $("in-mail").value = d.mail ?? "";
+    $("in-jnum").value = d.jnum ?? "";
+    $("in-date").value = d.date ?? "";
+    $("in-content").value = d.content ?? "";
+    $("in-foot").value = d.foot ?? $("in-foot").value;
+
+    $("in-opacity").value = d.opacity ?? "0.10";
+
+    $("in-name-col").value = d.nameCol ?? "#ffffff";
+    $("in-txt-col").value = d.txtCol ?? "#ffffff";
+
+    if(d.themeIndex !== undefined && d.themeIndex !== null){
+      $("themeDropdown").value = d.themeIndex;
+      if(d.themeIndex !== ""){
+        const t = themes[Number(d.themeIndex)];
+        if(t) setVars(t.bg, t.txt);
+      }
+    }
+
+    syncToPreview();
+  }
+
+  function saveTemplate(){
+    const data = getFormData();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    alert("✅ Template Save થઈ ગયું!");
+  }
+
+  function loadTemplate(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw){
+      alert("⚠️ કોઈ Saved Template નથી મળ્યું!");
+      return;
+    }
+    const data = JSON.parse(raw);
+    setFormData(data);
+    alert("✅ Template Load થઈ ગયું!");
+  }
+
+  function clearAll(){
+    if(!confirm("Clear કરવું છે?")) return;
+    $("in-tal").value = "";
+    $("in-dist").value = "";
+    $("in-dice").value = "";
+    $("in-est").value = "";
+    $("in-mo").value = "";
+    $("in-mail").value = "";
+    $("in-jnum").value = "";
+    $("in-date").value = "";
+    $("in-content").value = "અહીં તમારો પત્ર લખો...";
+    $("in-foot").value = "શાળાનું સરનામું અને પિનકોડ અહીં લખી શકાય.";
+    $("themeDropdown").value = "";
+    setVars(themes[0].bg, themes[0].txt);
+    $("in-name-col").value = "#ffffff";
+    $("in-txt-col").value = "#ffffff";
+    $("in-opacity").value = "0.10";
+    syncToPreview();
+  }
+
+  async function download4K(){
+    try{
+      window.scrollTo(0,0);
+      const el = $("letterhead");
+      const canvas = await html2canvas(el, { scale: 4, useCORS:true, backgroundColor:"#ffffff" });
+      const a = document.createElement("a");
+      a.download = "Letterhead_4K.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    }catch(e){
+      alert("❌ 4K ફોટો બન્યો નથી. (ઇન્ટરનેટ ચાલુ છે કે નહિ ચેક કરો)");
+      console.error(e);
+    }
+  }
+
+  async function downloadPDF(){
+    try{
+      window.scrollTo(0,0);
+      const el = $("letterhead");
+      const canvas = await html2canvas(el, { scale: 3, useCORS:true, backgroundColor:"#ffffff" });
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p","mm","a4");
+      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+      pdf.save("Letterhead.pdf");
+    }catch(e){
+      alert("❌ PDF બન્યો નથી. (ઇન્ટરનેટ ચાલુ છે કે નહિ ચેક કરો)");
+      console.error(e);
+    }
+  }
+
+  function printNow(){ window.print(); }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    populateThemes();
+    bindLive();
+
+    // image bindings
+    $("in-logo-left").addEventListener("change", ()=>loadImage($("in-logo-left"), "out-logo-left"));
+    $("in-logo-right").addEventListener("change", ()=>loadImage($("in-logo-right"), "out-logo-right"));
+    $("in-watermark").addEventListener("change", ()=>loadImage($("in-watermark"), "out-watermark"));
+    $("in-sig").addEventListener("change", ()=>loadImage($("in-sig"), "out-sig"));
+
+    // buttons
+    $("btnSave").addEventListener("click", saveTemplate);
+    $("btnLoad").addEventListener("click", loadTemplate);
+    $("btnClear").addEventListener("click", clearAll);
+    $("btnImg").addEventListener("click", download4K);
+    $("btnPdf").addEventListener("click", downloadPDF);
+    $("btnPrint").addEventListener("click", printNow);
+
+    // default theme
+    setVars(themes[0].bg, themes[0].txt);
+    syncToPreview();
+  });
+</script>
+
+</body>
+</html>
